@@ -25,8 +25,12 @@ final class Acl
         $controller = $dispatcher->getControllerName();
         $action = $dispatcher->getActionName();
 
-        if(!$acl->isAllowed($profile, $controller, $action)) {
-            $this->isAllowed = true;
+        if($acl->isComponent(strtolower($module))) {
+            if(!$acl->isAllowed($profile, $controller, $action)) {
+                $this->isAllowed = true;
+            }
+        } else {
+            throw new \Exception('Resource not found');
         }
     }
 
