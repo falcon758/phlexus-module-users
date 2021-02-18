@@ -17,19 +17,17 @@ final class Acl
 
         if($profile === null) {
             $profile = Profiles::GUEST;
+        } else {
+            $profile = $profile->name;
         }
 
         $module = $dispatcher->getModuleName();
         $controller = $dispatcher->getControllerName();
         $action = $dispatcher->getActionName();
 
-        $resource = strtolower($module) . '/' . strtolower($controller);
-
-        if(!$acl->isAllowed($profile->name, $resource, $action)) {
+        if(!$acl->isAllowed($profile, $controller, $action)) {
             $this->isAllowed = true;
         }
-
-        var_dump($this->isAllowed); exit();
     }
 
     public function isAllowed(): bool

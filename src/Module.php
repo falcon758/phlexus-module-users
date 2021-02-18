@@ -97,7 +97,7 @@ class Module extends PhlexusModule
         $view->setViewsDir($themePath . '/');
 
         // Default Acl
-        $acl = new DefaultAcl;
+        $acl = new DefaultAcl();
         $di->set('acl', $acl);
 
         $di->getShared('eventsManager')->attach('dispatch', new DispatcherListener());

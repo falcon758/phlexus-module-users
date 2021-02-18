@@ -25,38 +25,15 @@ final class DefaultAcl extends Memory
             return;
         }
 
-        $this->loadRoles($profile);
-
         $this->loadPermissions($profile);
     }
 
-    private function loadRoles(Profiles $profile): void {
-        $this->addRole(new Role($profile->type));
-    }
-
     private function loadPermissions(Profiles $profile): void {
-        $aclFile = ROOT_PATH . '/config/acl.php';
+        $this->addRole(new Role($profile->name));
 
-        $components = [];
-
-        if(file_exists($aclFile)) {
-            $components = require_once $aclFile;
+        foreach($profile->getPermissions() as $permission) {
+            $this->addComponent(new Component($permission->resource), $permission->action);
+            $this->allow($profile->name, $permission->resource, $permission->action);
         }
-
-        $profileName = $profile->type;
-
-        if(count($components) === 0 || !array_key_exists($profileName, $components)) {
-            return;
-        }
-        
-        $component = $components[$profileName];
-
-        foreach($component as $comp => $action) {
-            $this->addComponent(new Component($comp), $action);
-            
-            $this->allow($profileName, $comp, $access);
-        }
-
-        $this->allow('*', '*', '*');
     }
 }

@@ -20,7 +20,7 @@ class Users extends Model
 
     public function initialize()
     {
-        $this->hasOne('profilesId', Profiles::class, 'id', [
+        $this->hasOne('profileId', Profiles::class, 'id', [
             'alias'    => 'profile',
             'reusable' => true,
         ]);

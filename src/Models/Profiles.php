@@ -22,29 +22,19 @@ class Profiles extends Model
 
     public function initialize()
     {
-        $this->hasMany('id', Users::class, 'profilesId', [
+        $this->hasMany('id', Users::class, 'profileId', [
             'alias'      => 'users',
             'foreignKey' => [
                 'message' => 'Profile is being used on Users',
             ],
         ]);
 
-        $this->hasMany('id', Permissions::class, 'profilesId', [
+        $this->hasMany('id', Permissions::class, 'profileId', [
             'alias'      => 'permissions',
             'foreignKey' => [
                 'action' => Relation::ACTION_CASCADE,
             ],
         ]);
-    }
-
-    public static function getProfile() {
-        $user = Users::getUser();
-
-        if($user === null) {
-            return null;
-        }
-
-        return self::findFirstByid($user->profileId);
     }
 
     public static function getProfiles() {
@@ -54,5 +44,15 @@ class Profiles extends Model
                 'active' => 1
             ]
         ]);
+    }
+
+    public static function getUserProfile() {
+        $user = Users::getUser();
+
+        if($user === null) {
+            return null;
+        }
+
+        return self::findFirstByid($user->profileId);
     }
 }
