@@ -7,6 +7,7 @@ use Phalcon\Di\Injectable;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\DispatcherInterface;
 use Phlexus\Libraries\Auth\AuthException;
+use Phlexus\Modules\BaseUser\Acl\Acl;
 
 final class AuthorizationListener extends Injectable
 {
@@ -21,16 +22,19 @@ final class AuthorizationListener extends Injectable
      */
     public function beforeDispatchLoop(Event $event, DispatcherInterface $dispatcher, $data = null)
     {
-        // TODO: ACL need to be validated here
+        $di = $dispatcher->getDi();
+        $acl = new Acl($di->get('acl'), $dispatcher, $di->get('view'));
 
-        $this->getDI()->getShared('eventsManager')->fire(
-            'dispatch:beforeException',
-            $dispatcher,
-            new AuthException('User is not authorized.')
-        );
+        if(!$acl->isAllowed()) {
+            $this->getDI()->getShared('eventsManager')->fire(
+                'dispatch:beforeException',
+                $dispatcher,
+                new AuthException('User is not authorized.')
+            );
 
-        $event->stop();
+            $event->stop();
 
-        return $event->isStopped();
+            return $event->isStopped();
+        }
     }
 }

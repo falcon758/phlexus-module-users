@@ -18,6 +18,7 @@ use Phalcon\Loader;
 use Phalcon\Mvc\View\Engine\Volt;
 use Phlexus\Module as PhlexusModule;
 use Phlexus\Modules\BaseUser\Events\Listeners\AuthenticationListener;
+use Phlexus\Modules\BaseUser\Events\Listeners\AuthorizationListener;
 use Phlexus\Modules\BaseUser\Events\Listeners\DispatcherListener;
 use Phlexus\Modules\BaseUser\Acl\DefaultAcl;
 
@@ -95,11 +96,12 @@ class Module extends PhlexusModule
         $view->setMainView($themePath . '/layouts/default');
         $view->setViewsDir($themePath . '/');
 
-        $di->getShared('eventsManager')->attach('dispatch', new DispatcherListener());
-        $di->getShared('eventsManager')->attach('dispatch:beforeDispatchLoop', new AuthenticationListener());
-
         // Default Acl
         $acl = new DefaultAcl;
         $di->set('acl', $acl);
+
+        $di->getShared('eventsManager')->attach('dispatch', new DispatcherListener());
+        $di->getShared('eventsManager')->attach('dispatch:beforeDispatchLoop', new AuthenticationListener());
+        $di->getShared('eventsManager')->attach('dispatch:beforeDispatchLoop', new AuthorizationListener());
     }
 }
