@@ -6,6 +6,7 @@ namespace Phlexus\Modules\BaseUser\Acl;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
 use Phlexus\Modules\BaseUser\Models\Profiles;
+use Phalcon\Mvc\Dispatcher\Exception as MvcDispatcherException;
 
 final class Acl
 {
@@ -30,7 +31,7 @@ final class Acl
                 $this->isAllowed = true;
             }
         } else {
-            throw new \Exception('Resource not found');
+            throw new MvcDispatcherException('Resource not found.');
         }
     }
 

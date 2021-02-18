@@ -1,20 +1,10 @@
 {
-    "name": "local/phlexus-module-users",
+    "name": "phlexus/phlexus-module-users",
     "license": "BSD-3-Clause",
     "description": "Phlexus Users Module",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../phlexus-core"
-        },
-        {
-            "type": "path",
-            "url": "../phlexus-library-auth"
-        }
-    ],
     "require": {
-        "local/phlexus-core": "*",
-        "local/phlexus-library-auth": "*"
+        "phlexus/phlexus-core": "*",
+        "phlexus/phlexus-library-auth": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
