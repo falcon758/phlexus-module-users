@@ -26,8 +26,9 @@ final class Acl
         $controller = $dispatcher->getControllerName();
         $action = $dispatcher->getActionName();
 
-        if($acl->isComponent(strtolower($module))) {
-            if(!$acl->isAllowed($profile, $controller, $action)) {
+        $component = strtolower($module . '_' . $controller);
+        if($acl->isComponent($component)) {
+            if($acl->isAllowed($profile, $component, strtolower($action))) {
                 $this->isAllowed = true;
             }
         } else {
