@@ -19,13 +19,4 @@ abstract class AbstractController extends Controller
     {
         $this->tag->appendTitle(' - Phlexus User');
     }
-
-    protected function create(): bool {
-    }
-
-    protected function update(): bool {
-    }
-
-    protected function delete(): bool {
-    }
 }
