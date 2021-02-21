@@ -14,6 +14,7 @@ use Phlexus\Libraries\Auth\AuthException;
 use Phlexus\Module\ModuleException;
 use Phlexus\Module\ModuleInterface;
 use Phlexus\Modules\BaseUser\Module as UserModule;
+use Phlexus\Helpers;
 
 final class DispatcherListener extends Injectable
 {
@@ -32,20 +33,20 @@ final class DispatcherListener extends Injectable
     {
         if (!empty($forward['module'])) {
             $moduleName = $forward['module'];
-            if (!phlexus_container('modules')->offsetExists($moduleName)) {
+            if (!Helpers::phlexusContainer('modules')->offsetExists($moduleName)) {
                 throw new ModuleException("Module {$moduleName} does not exist.");
             }
 
-            $moduleDefinition = phlexus_container('modules')->offsetGet($moduleName);
+            $moduleDefinition = Helpers::phlexusContainer('modules')->offsetGet($moduleName);
             // TODO: think about that validation, as there are atm only vendor DI declaration
-            /*if (!phlexus_container()->has($moduleDefinition->className)) {
+            /*if (!Helpers::phlexusContainer()->has($moduleDefinition->className)) {
                 throw new DiException(
                     "Service '{$moduleDefinition->className}' wasn't found in the dependency injection container"
                 );
             }*/
 
             /** @var ModuleInterface $module */
-            $moduleClass = phlexus_container($moduleDefinition->className);
+            $moduleClass = Helpers::phlexusContainer($moduleDefinition->className);
             $dispatcher->setModuleName($moduleName);
             $dispatcher->setNamespaceName($moduleClass->getHandlersNamespace());
         }
