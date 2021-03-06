@@ -44,6 +44,7 @@ class AuthController extends Controller
             'email' => $email,
             'password' => $password,
         ]);
+        
         if ($login === false) {
             return $this->response->redirect('user/auth');
         }
