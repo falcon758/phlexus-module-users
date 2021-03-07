@@ -19,4 +19,12 @@ abstract class AbstractController extends Controller
     {
         $this->tag->appendTitle(' - Phlexus User');
     }
+
+    public function getBasePosition(): string
+    {
+        $module = $this->dispatcher->getModuleName();
+        $controller = $this->dispatcher->getControllerName();
+
+        return strtolower($module) . '/' . strtolower($controller);
+    }
 }
