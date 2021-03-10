@@ -5,6 +5,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
+use Phlexus\Modules\BaseUser\Form\LoginForm;
 
 /**
  * Class AuthController
@@ -22,6 +23,8 @@ class AuthController extends Controller
     {
         $this->tag->setTitle('Phlexus CMS');
         $this->view->setMainView('layouts/base');
+
+        $this->view->setVar('form', new LoginForm());
     }
 
     /**
@@ -37,8 +40,17 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth');
         }
 
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+        $form = new LoginForm();
+
+        $post = $this->request->getPost();
+
+        # @TODO: Validate forms, csrf problem
+        if(!$form->isValid($post) && false) {
+            return $this->response->redirect('user/auth');
+        }
+
+        $email = $post['email'];
+        $password = $post['password'];
 
         $login = $this->auth->login([
             'email' => $email,
