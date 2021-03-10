@@ -10,7 +10,7 @@ use Phlexus\Modules\BaseUser\Form\LoginForm;
 /**
  * Class AuthController
  *
- * @package Phlexus\Modules\User\Controllers
+ * @package Phlexus\Modules\BaseUser\Controllers
  */
 class AuthController extends Controller
 {
@@ -80,6 +80,11 @@ class AuthController extends Controller
         return $this->response->redirect('user/auth');
     }
 
+    /**
+     * Remind page
+     *
+     * @return void
+     */
     public function remindAction(): void
     {
         // TODO: implement

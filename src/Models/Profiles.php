@@ -6,6 +6,11 @@ namespace Phlexus\Modules\BaseUser\Models;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
 
+/**
+ * Class Profiles
+ *
+ * @package Phlexus\Modules\BaseUser\Models
+ */
 class Profiles extends Model
 {
     public const ADMIN = 'admin';

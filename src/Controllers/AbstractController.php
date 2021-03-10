@@ -8,7 +8,7 @@ use Phalcon\Mvc\Controller;
 /**
  * Abstract User Controller
  *
- * @package Phlexus\Modules\User\Controllers
+ * @package Phlexus\Modules\BaseUser\Controllers
  */
 abstract class AbstractController extends Controller
 {
@@ -20,6 +20,11 @@ abstract class AbstractController extends Controller
         $this->tag->appendTitle(' - Phlexus User');
     }
 
+    /**
+     * Get Base Position
+     *
+     * @return string Current base position (module/controller)
+     */
     public function getBasePosition(): string
     {
         $module = $this->dispatcher->getModuleName();

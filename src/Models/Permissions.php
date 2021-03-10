@@ -5,6 +5,11 @@ namespace Phlexus\Modules\BaseUser\Models;
 
 use Phalcon\Mvc\Model;
 
+/**
+ * Class Permissions
+ *
+ * @package Phlexus\Modules\BaseUser\Models
+ */
 class Permissions extends Model
 {
     public $id;

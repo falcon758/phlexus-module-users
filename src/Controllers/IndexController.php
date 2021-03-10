@@ -6,7 +6,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 /**
  * Class IndexController
  *
- * @package Phlexus\Modules\User\Controllers
+ * @package Phlexus\Modules\BaseUser\Controllers
  */
 final class IndexController extends AbstractController
 {

@@ -6,6 +6,11 @@ namespace Phlexus\Modules\BaseUser\Models;
 use Phalcon\Mvc\Model;
 use Phalcon\DI;
 
+/**
+ * Class Users
+ *
+ * @package Phlexus\Modules\BaseUser\Models
+ */
 class Users extends Model
 {
     public $id;
