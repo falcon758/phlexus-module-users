@@ -21,19 +21,13 @@ use Phlexus\Modules\BaseUser\Events\Listeners\AuthenticationListener;
 use Phlexus\Modules\BaseUser\Events\Listeners\AuthorizationListener;
 use Phlexus\Modules\BaseUser\Events\Listeners\DispatcherListener;
 use Phlexus\Modules\BaseUser\Acl\DefaultAcl;
+use Phlexus\Helpers;
 
 /**
  * User Module
  */
 class Module extends PhlexusModule
 {
-    /**
-     * Name of theme
-     *
-     * Which is also folder name inside themes folder.
-     */
-    const PHLEXUS_USER_THEME_NAME = 'phlexus-tabler-admin';
-
     /**
      * @return string
      */
@@ -58,7 +52,7 @@ class Module extends PhlexusModule
      * @param DiInterface $di
      * @return void
      */
-    public function registerAutoloaders(DiInterface $di = null)
+    public function registerAutoloaders(DiInterface $di = null): void
     {
         (new Loader())
             ->registerNamespaces([
@@ -74,12 +68,12 @@ class Module extends PhlexusModule
      * @param DiInterface|null $di
      * @return void
      */
-    public function registerServices(DiInterface $di = null)
+    public function registerServices(DiInterface $di = null): void
     {
         $view = $di->getShared('view');
-        $theme = $di->getShared('config')->get('theme');
+        $theme = Helpers::phlexusConfig('theme');
 
-        $themePath = $theme->themes_dir . self::PHLEXUS_USER_THEME_NAME;
+        $themePath = $theme->themes_dir . $theme->theme_user;
         $cacheDir = $theme->themes_dir_cache;
 
         $view->registerEngines([
@@ -88,6 +82,9 @@ class Module extends PhlexusModule
                 $volt->setOptions([
                     'path' => $cacheDir,
                 ]);
+
+                $compiler = $volt->getCompiler();
+                $compiler->addFunction('assetsPath', '\Phlexus\Helpers::phlexusAssetsPath');
 
                 return $volt;
             }

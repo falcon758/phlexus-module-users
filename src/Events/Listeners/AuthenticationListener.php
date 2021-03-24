@@ -8,6 +8,7 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\DispatcherInterface;
 use Phlexus\Libraries\Auth\AuthException;
 use Phlexus\Modules\BaseUser\Module as UserModule;
+use Phlexus\Helpers;
 
 final class AuthenticationListener extends Injectable
 {
@@ -52,7 +53,7 @@ final class AuthenticationListener extends Injectable
     protected function isRouteExcluded(): bool
     {
         $router = $this->getDI()->getShared('router');
-        $config = $this->getDI()->getShared('config')->toArray();
+        $config = Helpers::phlexusConfig()->toArray();
 
         $module = $router->getModuleName();
         $controller = $router->getControllerName();

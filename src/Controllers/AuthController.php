@@ -6,6 +6,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
+use Phlexus\Helpers;
 
 /**
  * Class AuthController
