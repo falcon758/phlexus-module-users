@@ -41,12 +41,11 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth');
         }
 
-        $form = new LoginForm();
+        $form = new LoginForm(false);
 
         $post = $this->request->getPost();
 
-        # @TODO: Validate forms, csrf problem
-        if(!$form->isValid($post) && false) {
+        if(!$form->isValid($post)) {
             return $this->response->redirect('user/auth');
         }
 
