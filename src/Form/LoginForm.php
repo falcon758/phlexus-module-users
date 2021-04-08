@@ -24,9 +24,7 @@ class LoginForm extends FormBase
      * Initialize form
      */
     public function initialize()
-    {
-        parent::initialize();
-        
+    {        
         $email = new Email('email', [
             'required' => true,
             'class' => 'form-control',
