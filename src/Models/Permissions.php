@@ -20,6 +20,12 @@ class Permissions extends Model
 
     public $action;
     
+
+    /**
+     * Initialize
+     *
+     * @return void
+     */
     public function initialize()
     {
         $this->belongsTo('profileId', Profiles::class, 'id', [

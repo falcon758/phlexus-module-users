@@ -5,6 +5,7 @@ namespace Phlexus\Modules\BaseUser\Models;
 
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * Class Profiles
@@ -25,6 +26,11 @@ class Profiles extends Model
 
     public $active;
 
+    /**
+     * Initialize
+     *
+     * @return void
+     */
     public function initialize()
     {
         $this->hasMany('id', Users::class, 'profileId', [
@@ -42,8 +48,13 @@ class Profiles extends Model
         ]);
     }
 
-    public static function getProfiles() {
-        return Profiles::find([
+    /**
+     * Get active profiles
+     *
+     * @return Simple
+     */
+    public static function getProfiles(): Simple {
+        return self::find([
             'active = :active:',
             'bind' => [
                 'active' => 1
@@ -51,7 +62,12 @@ class Profiles extends Model
         ]);
     }
 
-    public static function getUserProfile() {
+    /**
+     * Get user profile
+     *
+     * @return Profiles
+     */
+    public static function getUserProfile(): Profiles {
         $user = Users::getUser();
 
         if($user === null) {
@@ -59,5 +75,14 @@ class Profiles extends Model
         }
 
         return self::findFirstByid($user->profileId);
+    }
+
+    /**
+     * Is admin
+     *
+     * @return bool
+     */
+    public function isAdmin() {
+        return $this->name === self::ADMIN;
     }
 }
