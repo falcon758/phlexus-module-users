@@ -16,7 +16,7 @@ final class Acl
     {
         $profile = Profiles::getUserProfile();
 
-        if($profile === null) {
+        if(!$profile->id) {
             $profile = Profiles::GUEST;
         } else {
             $profile = $profile->name;

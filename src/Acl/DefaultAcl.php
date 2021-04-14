@@ -21,7 +21,7 @@ final class DefaultAcl extends Memory
 
         $profile = Profiles::getUserProfile();
 
-        if($profile === null) {
+        if(!$profile->id) {
             $profile = Profiles::findFirstByname(Profiles::GUEST);
         }
 

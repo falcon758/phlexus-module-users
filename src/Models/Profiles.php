@@ -70,8 +70,8 @@ class Profiles extends Model
     public static function getUserProfile(): Profiles {
         $user = Users::getUser();
 
-        if($user === null) {
-            return null;
+        if($user === null || !$user->profileId) {
+            return new self;
         }
 
         return self::findFirstByid($user->profileId);

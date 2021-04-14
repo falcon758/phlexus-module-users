@@ -9,6 +9,7 @@ use Phalcon\Mvc\DispatcherInterface;
 use Phlexus\Libraries\Auth\AuthException;
 use Phlexus\Modules\BaseUser\Module as UserModule;
 use Phlexus\Helpers;
+use Phlexus\Modules\BaseUser\Events\Listeners\AuthManager;
 
 final class AuthenticationListener extends Injectable
 {
@@ -31,13 +32,13 @@ final class AuthenticationListener extends Injectable
             );
         }
 
-        // TODO: Verify if user can login or passwords exceeded
-        //$this->getDI()->getShared('eventsManager')->attach(
-        //    'auth:beforeLogin',
-        //    function (Event $event, AuthManager $manager, $data) {
-        //        return true;
-        //    }
-       // );
+        // TODO: Verify if user can login or passwords attempts exceeded
+       #$this->getDI()->getShared('eventsManager')->attach(
+       #     'auth:beforeLogin',
+       #     function (Event $event, AuthManager $manager, $data) {
+       #         return true;
+       #     }
+       #);
 
         return !$event->isStopped();
     }
