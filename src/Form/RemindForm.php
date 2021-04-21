@@ -18,7 +18,7 @@ use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 
-class LoginForm extends FormBase
+class RemindForm extends FormBase
 {
     /**
      * Initialize form

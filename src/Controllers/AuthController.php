@@ -98,6 +98,6 @@ class AuthController extends Controller
         $this->tag->setTitle('Phlexus CMS');
         $this->view->setMainView('layouts/base');
 
-        $this->view->setVar('form', new ReminderForm());
+        $this->view->setVar('form', new RemindForm());
     }
 }
