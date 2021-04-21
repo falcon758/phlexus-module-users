@@ -16,6 +16,8 @@ class Users extends Model
 {
     const MAX_ATTEMPTS = 5;
 
+    private $storePassword;
+
     public $id;
 
     public $email;
@@ -50,17 +52,27 @@ class Users extends Model
     }
 
     /**
+     * After Fetch
+     *
+     * @return void
+     */
+    public function afterFetch()
+    {
+        $this->storePassword = $this->password;
+    }
+
+
+    /**
      * Before Save
      *
      * @return void
      */
     public function beforeSave()
     {
-        # @ToDo: Check if password changed before encrypt
-        #if($this->password !== null) {
-        #    $security = new Security();
-        #    $this->password = $security->hash($this->password);
-        #}
+        if($this->password !== null && $this->storePassword !== $this->password) {
+            $security = new Security();
+            $this->password = $security->hash($this->password);
+        }
     }
 
     /**
