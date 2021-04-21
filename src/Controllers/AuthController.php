@@ -6,6 +6,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
+use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Models\Users;
 use Phlexus\Helpers;
 
@@ -94,6 +95,9 @@ class AuthController extends Controller
      */
     public function remindAction(): void
     {
-        // TODO: implement
+        $this->tag->setTitle('Phlexus CMS');
+        $this->view->setMainView('layouts/base');
+
+        $this->view->setVar('form', new ReminderForm());
     }
 }
