@@ -8,8 +8,9 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\DispatcherInterface;
 use Phlexus\Libraries\Auth\AuthException;
 use Phlexus\Modules\BaseUser\Module as UserModule;
+use Phlexus\Modules\BaseUser\Models\Users as UserModel;
+use Phlexus\Libraries\Auth\Manager as AuthManager;
 use Phlexus\Helpers;
-use Phlexus\Modules\BaseUser\Events\Listeners\AuthManager;
 
 final class AuthenticationListener extends Injectable
 {
@@ -32,13 +33,16 @@ final class AuthenticationListener extends Injectable
             );
         }
 
-        // TODO: Verify if user can login or passwords attempts exceeded
-       #$this->getDI()->getShared('eventsManager')->attach(
-       #     'auth:beforeLogin',
-       #     function (Event $event, AuthManager $manager, $data) {
-       #         return true;
-       #     }
-       #);
+        $this->getDI()->getShared('eventsManager')->attach(
+            'auth:beforeLogin',
+            function (Event $event, AuthManager $manager, $data) {
+                if(!isset($data['email'])) {
+                    return false;
+                }
+
+                return UserModel::canLogin($data['email']);
+            }
+        );
 
         return !$event->isStopped();
     }

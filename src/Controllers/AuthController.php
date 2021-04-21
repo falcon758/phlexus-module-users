@@ -6,6 +6,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
+use Phlexus\Modules\BaseUser\Models\Users;
 use Phlexus\Helpers;
 
 /**
@@ -52,14 +53,20 @@ class AuthController extends Controller
         $email = $post['email'];
         $password = $post['password'];
 
+        $user = Users::findFirstByEmail($email);
+
         $login = $this->auth->login([
             'email' => $email,
             'password' => $password,
         ]);
         
         if ($login === false) {
+            $user->failedLogin();
+
             return $this->response->redirect('user/auth');
         }
+
+        $user->successfullLogin();
 
         return $this->response->redirect('user');
     }

@@ -14,15 +14,27 @@ use Phalcon\Security;
  */
 class Users extends Model
 {
+    const MAX_ATTEMPTS = 5;
+
     public $id;
 
     public $email;
 
     public $password;
 
-    public $profileId;
-
     public $active;
+
+    public $attempts;
+
+    public $lastLoginAt;
+
+    public $lastFailedLoginAt;
+
+    public $createdAt;
+
+    public $modifiedAt;
+
+    public $profileId;
 
     /**
      * Initialize
@@ -51,6 +63,39 @@ class Users extends Model
     }
 
     /**
+     * Register successfull login
+     *
+     * @return bool
+     */
+    public function successfullLogin()
+    {
+        $ts = date('Y-m-d H:i:s', time());
+
+        $this->lastLoginAt = $ts;
+        $this->attempts = 0;
+        
+        return $this->save();
+    }
+
+    /**
+     * Register failed login
+     *
+     * @return bool
+     */
+    public function failedLogin()
+    {
+        if(!$this->id) { return false; }
+
+        $ts = date('Y-m-d H:i:s', time());
+
+        $this->lastFailedLoginAt = $ts;
+        $this->attempts = intval($this->attempts) + 1;
+        
+        return$this->save();
+    }
+    
+
+    /**
      * Get Current User
      *
      * @return Users
@@ -65,5 +110,23 @@ class Users extends Model
         }
 
         return self::findFirstByid($userId);
+    }
+
+    /**
+     * Can User Login
+     *
+     * @param string $email User email to validate
+     * 
+     * @return bool
+     */
+    // TODO: Verify if passwords attempts exceeded
+    public static function canLogin(string $email): bool {
+        $user = self::findFirstByEmail($email);
+
+        if(!$user || $user->active === 0 || $user->attempts >= self::MAX_ATTEMPTS) {
+            return false;
+        }
+
+        return true;
     }
 }
