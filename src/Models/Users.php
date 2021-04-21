@@ -56,10 +56,11 @@ class Users extends Model
      */
     public function beforeSave()
     {
-        if($this->password !== null) {
-            $security = new Security();
-            $this->password = $security->hash($this->password);
-        }
+        # @ToDo: Check if password changed before encrypt
+        #if($this->password !== null) {
+        #    $security = new Security();
+        #    $this->password = $security->hash($this->password);
+        #}
     }
 
     /**
@@ -119,7 +120,6 @@ class Users extends Model
      * 
      * @return bool
      */
-    // TODO: Verify if passwords attempts exceeded
     public static function canLogin(string $email): bool {
         $user = self::findFirstByEmail($email);
 
