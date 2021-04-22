@@ -30,6 +30,11 @@ $routes->addGet('/user/auth/remind', [
     'action' => 'remind',
 ]);
 
+$routes->addPost('/user/auth/doRemind', [
+    'controller' => 'auth',
+    'action' => 'doRemind',
+]);
+
 $routes->addGet('/user/auth/logout', [
     'controller' => 'auth',
     'action' => 'logout',

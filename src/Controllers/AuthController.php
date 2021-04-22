@@ -73,6 +73,46 @@ class AuthController extends Controller
     }
 
     /**
+     * Remind POST request handler
+     *
+     * @return ResponseInterface
+     */
+    public function doRemindAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        if (!$this->request->isPost()) {
+            return $this->response->redirect('user/remind');
+        }
+
+        $form = new RemindForm(false);
+
+        $post = $this->request->getPost();
+
+        if(!$form->isValid($post)) {
+            return $this->response->redirect('user/remind');
+        }
+
+        $email = $post['email'];
+
+        $user = Users::findFirstByEmail($email);
+
+        if(!$user || $user->hash_code !== null) {
+            return $this->response->redirect('user/auth');
+        }
+
+        $hash_code = $this->security->getRandom()->base64Safe(40);
+
+        $user->hash_code = $hash_code;
+
+        $user->save();
+
+        // @ToDo: Send email with the code to reset
+
+        return $this->response->redirect('user/auth');
+    }
+
+    /**
      * Logout POST request handler
      *
      * @return ResponseInterface

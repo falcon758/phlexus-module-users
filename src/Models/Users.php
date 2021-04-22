@@ -24,6 +24,8 @@ class Users extends Model
 
     public $password;
 
+    public $hash_code;
+
     public $active;
 
     public $attempts;
