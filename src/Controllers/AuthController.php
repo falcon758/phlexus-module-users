@@ -73,6 +73,35 @@ class AuthController extends Controller
     }
 
     /**
+     * Logout POST request handler
+     *
+     * @return ResponseInterface
+     */
+    public function logoutAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        if ($this->auth->isLogged()) {
+            $this->auth->logout();
+        }
+
+        return $this->response->redirect('user/auth');
+    }
+
+    /**
+     * Remind page
+     *
+     * @return void
+     */
+    public function remindAction(): void
+    {
+        $this->tag->setTitle('Phlexus CMS');
+        $this->view->setMainView('layouts/base');
+
+        $this->view->setVar('form', new RemindForm());
+    }
+
+    /**
      * Remind POST request handler
      *
      * @return ResponseInterface
@@ -110,34 +139,5 @@ class AuthController extends Controller
         // @ToDo: Send email with the code to reset
 
         return $this->response->redirect('user/auth');
-    }
-
-    /**
-     * Logout POST request handler
-     *
-     * @return ResponseInterface
-     */
-    public function logoutAction(): ResponseInterface
-    {
-        $this->view->disable();
-
-        if ($this->auth->isLogged()) {
-            $this->auth->logout();
-        }
-
-        return $this->response->redirect('user/auth');
-    }
-
-    /**
-     * Remind page
-     *
-     * @return void
-     */
-    public function remindAction(): void
-    {
-        $this->tag->setTitle('Phlexus CMS');
-        $this->view->setMainView('layouts/base');
-
-        $this->view->setVar('form', new RemindForm());
     }
 }
