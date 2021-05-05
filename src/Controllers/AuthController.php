@@ -136,8 +136,33 @@ class AuthController extends Controller
 
         $user->save();
 
-        // @ToDo: Send email with the code to reset
+        $this->sendRemindEmail($user, $hash_code);
 
         return $this->response->redirect('user/auth');
+    }
+
+    /**
+     * Send Remind Email
+     * 
+     * @param Users $users Users model
+     * @param string $code  Reset Code
+     *
+     * @return bool
+     */
+    private function sendRemindEmail(Users $user, string $code) {
+        $body = $this->view->getPartial('emails/auth/remind', ['url' => $code]);
+
+        $mail = $this->di->getShared('email');
+
+        // If not inside Phlexus cms
+        if(!$mail) {
+            return false;
+        }
+
+        $mail->addAddress($user->email);
+        $mail->Subject = 'Password Reminder';
+        $mail->Body    = $body;
+
+        return $mail->send();
     }
 }
