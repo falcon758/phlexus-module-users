@@ -111,7 +111,7 @@ class AuthController extends Controller
         $this->view->disable();
 
         if (!$this->request->isPost()) {
-            return $this->response->redirect('user/remind');
+            return $this->response->redirect('user/auth/remind');
         }
 
         $form = new RemindForm(false);
@@ -119,7 +119,7 @@ class AuthController extends Controller
         $post = $this->request->getPost();
 
         if(!$form->isValid($post)) {
-            return $this->response->redirect('user/remind');
+            return $this->response->redirect('user/auth/remind');
         }
 
         $email = $post['email'];
@@ -136,21 +136,36 @@ class AuthController extends Controller
 
         $user->save();
 
-        $this->sendRemindEmail($user, $hash_code);
+        if(!$this->sendRemindEmail($user, $hash_code)) {
+            return $this->response->redirect('user/auth/remind');
+        }
 
         return $this->response->redirect('user/auth');
+    }
+
+    /**
+     * Recover user password
+     * 
+     * @param string $code Hash Code
+     *
+     * @return void
+     */
+    public function recoverAction(string $hash_code) {
+        //@ToDo Finish recover logic
     }
 
     /**
      * Send Remind Email
      * 
      * @param Users $users Users model
-     * @param string $code  Reset Code
+     * @param string $code Hash Code
      *
      * @return bool
      */
     private function sendRemindEmail(Users $user, string $code) {
-        $body = $this->view->getPartial('emails/auth/remind', ['url' => $code]);
+        $url = $this->url->get('user/auth/recover', ['hash' => $code]);
+
+        $body = $this->view->getPartial('emails/auth/remind', ['url' => $url]);
 
         $mail = $this->di->getShared('email');
 
