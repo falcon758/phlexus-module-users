@@ -7,6 +7,7 @@ use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
+use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\Users;
 use Phlexus\Helpers;
 
@@ -17,6 +18,8 @@ use Phlexus\Helpers;
  */
 class AuthController extends Controller
 {
+    const HASHLENGTH = 40;
+
     /**
      * Login page
      *
@@ -132,7 +135,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth');
         }
 
-        $hash_code = $this->security->getRandom()->base64Safe(40);
+        $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
 
         $user->hash_code = $hash_code;
 
@@ -150,11 +153,24 @@ class AuthController extends Controller
      * 
      * @param string $code Hash Code
      *
-     * @return void
+     * @return ResponseInterface|void
+     * 
+     * @ToDo: Restrict number of accesses by ip to prevent hash brute force
      */
     public function recoverAction(string $hash_code) {
-        //@ToDo Finish recover logic
-        exit('test');
+        $user = Users::findByHash_code($hash_code);
+
+        // Assure that only one hash is found
+        if (count($user) !== 1) {
+            return $this->response->redirect('user/auth/remind');
+        }
+
+        $this->tag->setTitle('Phlexus CMS');
+        $this->view->setMainView('layouts/base');
+
+        $this->view->setVar('form', new RecoverForm());
+
+        //@ToDo: Finish recover logic
     }
 
     /**

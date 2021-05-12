@@ -102,7 +102,7 @@ final class AuthenticationListener extends Injectable
     {
         return [
             UserModule::getModuleName() => [
-                'auth' => ['login', 'remind', 'doLogin', 'doRemind', 'logout'],
+                'auth' => ['login', 'remind', 'recover', 'doLogin', 'doRemind', 'doRecover', 'logout'],
             ],
         ];
     }
