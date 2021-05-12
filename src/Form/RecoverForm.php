@@ -46,7 +46,7 @@ class RecoverForm extends FormBase
         
         $hash_code->addValidator(new Alnum(
             [
-                "message" => ":field must contain only alphanumeric characters",
+                'message' => ':field must contain only alphanumeric characters.'
             ]
         ));
 
