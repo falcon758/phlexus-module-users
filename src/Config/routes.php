@@ -35,6 +35,16 @@ $routes->addPost('/user/auth/doRemind', [
     'action' => 'doRemind',
 ]);
 
+$routes->addGet('/user/auth/recover/{hash_code:[0-9a-zA-Z]+}', [
+    'controller' => 'auth',
+    'action' => 'recover',
+]);
+
+$routes->addPost('/user/auth/doRecover', [
+    'controller' => 'auth',
+    'action' => 'doRecover',
+]);
+
 $routes->addGet('/user/auth/logout', [
     'controller' => 'auth',
     'action' => 'logout',

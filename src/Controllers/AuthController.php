@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
-        if(!$form->isValid($post)) {
+        if (!$form->isValid($post)) {
             return $this->response->redirect('user/auth');
         }
 
@@ -62,7 +62,9 @@ class AuthController extends Controller
         ]);
         
         if ($login === false) {
-            $user->failedLogin();
+            if ($user !== null) {
+                $user->failedLogin();
+            }
 
             return $this->response->redirect('user/auth');
         }
@@ -118,7 +120,7 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
-        if(!$form->isValid($post)) {
+        if (!$form->isValid($post)) {
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -126,7 +128,7 @@ class AuthController extends Controller
 
         $user = Users::findFirstByEmail($email);
 
-        if(!$user || $user->hash_code !== null) {
+        if (!$user || $user->hash_code !== null) {
             return $this->response->redirect('user/auth');
         }
 
@@ -136,7 +138,7 @@ class AuthController extends Controller
 
         $user->save();
 
-        if(!$this->sendRemindEmail($user, $hash_code)) {
+        if (!$this->sendRemindEmail($user, $hash_code)) {
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -152,6 +154,7 @@ class AuthController extends Controller
      */
     public function recoverAction(string $hash_code) {
         //@ToDo Finish recover logic
+        exit('test');
     }
 
     /**
@@ -170,7 +173,7 @@ class AuthController extends Controller
         $mail = $this->di->getShared('email');
 
         // If not inside Phlexus cms
-        if(!$mail) {
+        if (!$mail) {
             return false;
         }
 
