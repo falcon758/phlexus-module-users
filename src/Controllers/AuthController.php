@@ -155,7 +155,7 @@ class AuthController extends Controller
      *
      * @return ResponseInterface|void
      * 
-     * @ToDo: Restrict number of accesses by ip to prevent hash brute force
+     * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function recoverAction(string $hash_code) {
         $user = Users::findByHash_code($hash_code);
@@ -168,9 +168,55 @@ class AuthController extends Controller
         $this->tag->setTitle('Phlexus CMS');
         $this->view->setMainView('layouts/base');
 
-        $this->view->setVar('form', new RecoverForm());
+        $recover_form = new RecoverForm();
 
-        //@ToDo: Finish recover logic
+        $recover_form->get('hash_code')->setDefault($hash_code);
+
+        $this->view->setVar('form', $recover_form);
+    }
+
+    /**
+     * Recover POST request handler
+     *
+     * @return ResponseInterface
+     * 
+     * @ToDo: Restrict number of requests by ip to prevent hash brute force
+     */
+    public function doRecoverAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        if (!$this->request->isPost()) {
+            return $this->response->redirect('user/auth/remind');
+        }
+
+        $form = new RecoverForm(false);
+
+        $post = $this->request->getPost();
+
+        $hash_code = $post['hash_code'];
+
+        if (!$form->isValid($post)) {
+            return $this->response->redirect('user/auth/remind');
+        }
+
+        $user = Users::findByHash_code($hash_code);
+
+        // Assure that only one hash is found
+        if (count($user) !== 1) {
+            return $this->response->redirect('user/auth/remind');
+        }
+
+        $user = $user[0];
+
+        $user->password = $post['password'];
+        $user->hash_code = null;
+
+        if (!$user->save()) {
+            return $this->response->redirect('user/auth/remind');
+        }
+
+        return $this->response->redirect('user/auth');
     }
 
     /**

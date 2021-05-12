@@ -14,9 +14,11 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Form\FormBase;
+use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\Alnum;
 
 class RecoverForm extends FormBase
 {
@@ -25,6 +27,11 @@ class RecoverForm extends FormBase
      */
     public function initialize()
     {
+        $hash_code = new Hidden('hash_code', [
+            'required' => true,
+            'class' => 'form-control'
+        ]);
+
         $password = new Password('password', [
             'required' => true,
             'class' => 'form-control',
@@ -37,6 +44,12 @@ class RecoverForm extends FormBase
             'placeholder' => 'Password'
         ]);
         
+        $hash_code->addValidator(new Alnum(
+            [
+                "message" => ":field must contain only alphanumeric characters",
+            ]
+        ));
+
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
         $repeat_password->addValidator(new PresenceOf(['message' => 'Password is required']));
@@ -46,6 +59,7 @@ class RecoverForm extends FormBase
             'message' => 'Passwords not equal'
         )));
 
+        $this->add($hash_code);
         $this->add($password);
         $this->add($repeat_password);
     }
