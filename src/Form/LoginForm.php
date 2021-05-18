@@ -31,18 +31,17 @@ class LoginForm extends FormBase
             'placeholder' => 'Email'
         ]);
         
-        $email->addValidator(new PresenceOf(['message' => 'Email is required']));
-        
-        $this->add($email);
-        
         $password = new Password('password', [
             'required' => true,
             'class' => 'form-control',
             'placeholder' => 'Password'
         ]);
         
+        $email->addValidator(new PresenceOf(['message' => 'Email is required']));
+        
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
+        $this->add($email);
         $this->add($password);
     }
 }

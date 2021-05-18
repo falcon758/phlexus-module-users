@@ -14,24 +14,24 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Form\FormBase;
-use Phalcon\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\Alnum;
 
-class RecoverForm extends FormBase
+class RegisterForm extends FormBase
 {
     /**
      * Initialize form
      */
     public function initialize()
-    {
-        $hash_code = new Hidden('hash_code', [
+    {        
+        $email = new Email('email', [
             'required' => true,
-            'class' => 'form-control'
+            'class' => 'form-control',
+            'placeholder' => 'Email'
         ]);
-
+        
         $password = new Password('password', [
             'required' => true,
             'class' => 'form-control',
@@ -43,23 +43,17 @@ class RecoverForm extends FormBase
             'class' => 'form-control',
             'placeholder' => 'Repeat-Password'
         ]);
-        
-        $hash_code->addValidator(new Alnum(
-            [
-                'message' => ':field must contain only alphanumeric characters.'
-            ]
-        ));
 
+        $email->addValidator(new PresenceOf(['message' => 'Email is required']));        
+        
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
-        $repeat_password->addValidator(new PresenceOf(['message' => 'Password is required']));
-
         $repeat_password->addValidator(new Identical(array(
             'value' => $password->getValue(),
             'message' => 'Passwords not equal'
         )));
 
-        $this->add($hash_code);
+        $this->add($email);
         $this->add($password);
         $this->add($repeat_password);
     }

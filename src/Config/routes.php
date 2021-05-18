@@ -15,6 +15,16 @@ $routes->addGet('/user', [
     'action' => 'index',
 ]);
 
+$routes->addGet('/user/auth/create', [
+    'controller' => 'auth',
+    'action' => 'create',
+]);
+
+$routes->addPost('/user/auth/doCreate', [
+    'controller' => 'auth',
+    'action' => 'doCreate',
+]);
+
 $routes->addGet('/user/auth', [
     'controller' => 'auth',
     'action' => 'login',

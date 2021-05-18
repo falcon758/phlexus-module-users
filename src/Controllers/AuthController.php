@@ -5,6 +5,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
+use Phlexus\Modules\BaseUser\Form\RegisterForm;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
@@ -20,6 +21,36 @@ class AuthController extends Controller
 {
     const HASHLENGTH = 40;
 
+    public function initialize(): void
+    {
+        $this->tag->setTitle('Phlexus CMS');
+        $this->view->setMainView('layouts/base');
+    }
+
+    /**
+     * Make register page
+     *
+     * @return void
+     */
+    public function createAction(): void
+    {
+        $this->view->setVar('form', new RegisterForm());
+    }
+
+    /**
+     * Make register POST request handler
+     *
+     * @return ResponseInterface
+     */
+    public function doCreateAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        if (!$this->request->isPost()) {
+            return $this->response->redirect('user/auth/create');
+        }
+    }
+
     /**
      * Login page
      *
@@ -27,9 +58,6 @@ class AuthController extends Controller
      */
     public function loginAction(): void
     {
-        $this->tag->setTitle('Phlexus CMS');
-        $this->view->setMainView('layouts/base');
-
         $this->view->setVar('form', new LoginForm());
     }
 
@@ -100,9 +128,6 @@ class AuthController extends Controller
      */
     public function remindAction(): void
     {
-        $this->tag->setTitle('Phlexus CMS');
-        $this->view->setMainView('layouts/base');
-
         $this->view->setVar('form', new RemindForm());
     }
 
@@ -164,9 +189,6 @@ class AuthController extends Controller
         if (count($user) !== 1) {
             return $this->response->redirect('user/auth/remind');
         }
-
-        $this->tag->setTitle('Phlexus CMS');
-        $this->view->setMainView('layouts/base');
 
         $recover_form = new RecoverForm();
 
