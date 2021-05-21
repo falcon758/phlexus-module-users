@@ -66,10 +66,10 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $new_user = new Users();
-        $new_user->email = $post['email'];
-        $new_user->password = $post['password'];
-        $new_user->active = Users::DISABLED;
+        $new_user            = new Users();
+        $new_user->email     = $post['email'];
+        $new_user->password  = $post['password'];
+        $new_user->active    = Users::DISABLED;
         $new_user->profileId = Profiles::MEMBER;
 
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
@@ -99,14 +99,21 @@ class AuthController extends Controller
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function activateAction(string $hash_code) {
-        $user = Users::findByHash_code($hash_code);
+        $user = Users::findFirst([
+            'conditions' => "status = :status: AND hash_code = :hash_code:",
+            'bind'       => [
+                'status'  => Users::DISABLED,
+                'hash_code'  => $hash_code
+            ],
+        ]);
 
         // Assure that only one hash is found
-        if ($user->status === Users::DISABLED && count($user) !== 1) {
+        if (count($user) !== 1) {
             return $this->response->redirect('user/auth/create');
         }
 
-        $user->status = Users::ENABLED;
+        $user->status    = Users::ENABLED;
+        $user->hash_code = null;
 
         if (!$user->save()) {
             return $this->response->redirect('user/auth/create');
@@ -146,7 +153,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth');
         }
 
-        $email = $post['email'];
+        $email    = $post['email'];
         $password = $post['password'];
 
         $user = Users::findFirstByEmail($email);
@@ -295,7 +302,7 @@ class AuthController extends Controller
 
         $user = $user[0];
 
-        $user->password = $post['password'];
+        $user->password  = $post['password'];
         $user->hash_code = null;
 
         if (!$user->save()) {
