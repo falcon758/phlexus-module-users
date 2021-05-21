@@ -75,7 +75,7 @@ class AuthController extends Controller
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
         $user->hash_code = $hash_code;
 
-        if(!$new_user->save()) {
+        if (!$new_user->save()) {
             return $this->response->redirect('user/auth/create');
         }
 
