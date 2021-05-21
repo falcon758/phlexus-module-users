@@ -10,6 +10,7 @@ use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\Users;
+use Phlexus\Modules\BaseUser\Models\Profiles;
 use Phlexus\Helpers;
 
 /**
@@ -49,6 +50,69 @@ class AuthController extends Controller
         if (!$this->request->isPost()) {
             return $this->response->redirect('user/auth/create');
         }
+
+        $form = new RegisterForm(false);
+
+        $post = $this->request->getPost();
+
+        if (!$form->isValid($post)) {
+            return $this->response->redirect('user/auth/create');
+        }
+
+        $user = Users::findFirstByEmail($email);
+
+        // Email already registered
+        if ($user) {
+            return $this->response->redirect('user/auth/create');
+        }
+
+        $new_user = new Users();
+        $new_user->email = $post['email'];
+        $new_user->password = $post['password'];
+        $new_user->active = Users::DISABLED;
+        $new_user->profileId = Profiles::MEMBER;
+
+        $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
+        $user->hash_code = $hash_code;
+
+        if(!$new_user->save()) {
+            return $this->response->redirect('user/auth/create');
+        }
+
+        if (!$this->sendActivateEmail($user, $hash_code)) {
+            $new_user->delete();
+
+            return $this->response->redirect('user/auth/create');
+        }
+
+        return $this->response->redirect('user/auth');
+    }
+
+
+    /**
+     * Activate user
+     * 
+     * @param string $code Hash Code
+     *
+     * @return ResponseInterface|void
+     * 
+     * @ToDo: Restrict number of requests by ip to prevent hash brute force
+     */
+    public function activateAction(string $hash_code) {
+        $user = Users::findByHash_code($hash_code);
+
+        // Assure that only one hash is found
+        if ($user->status === Users::DISABLED && count($user) !== 1) {
+            return $this->response->redirect('user/auth/create');
+        }
+
+        $user->status = Users::ENABLED;
+
+        if (!$user->save()) {
+            return $this->response->redirect('user/auth/create');
+        }
+
+        return $this->response->redirect('user/auth');
     }
 
     /**
@@ -239,6 +303,33 @@ class AuthController extends Controller
         }
 
         return $this->response->redirect('user/auth');
+    }
+
+    /**
+     * Send Activate Email
+     * 
+     * @param Users $users Users model
+     * @param string $code Hash Code
+     *
+     * @return bool
+     */
+    private function sendActivateEmail(Users $user, string $code) {
+        $url = $this->url->get('user/auth/activate', ['hash' => $code]);
+
+        $body = $this->view->getPartial('emails/auth/activate', ['url' => $url]);
+
+        $mail = $this->di->getShared('email');
+
+        // If not inside Phlexus cms
+        if (!$mail) {
+            return false;
+        }
+
+        $mail->addAddress($user->email);
+        $mail->Subject = 'Account Activation';
+        $mail->Body    = $body;
+
+        return $mail->send();
     }
 
     /**

@@ -25,6 +25,11 @@ $routes->addPost('/user/auth/doCreate', [
     'action' => 'doCreate',
 ]);
 
+$routes->addPost('/user/auth/activate', [
+    'controller' => 'auth',
+    'action' => 'activate',
+]);
+
 $routes->addGet('/user/auth', [
     'controller' => 'auth',
     'action' => 'login',

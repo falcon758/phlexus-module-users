@@ -11,10 +11,16 @@ use Phalcon\Security;
  * Class Users
  *
  * @package Phlexus\Modules\BaseUser\Models
+ * 
+ * @ToDo: Only fetch enabled users, if status not specified
  */
 class Users extends Model
 {
     const MAX_ATTEMPTS = 5;
+
+    const DISABLED = 0;
+
+    const ENABLED = 1;
 
     private $storePassword;
 
