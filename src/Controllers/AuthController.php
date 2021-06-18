@@ -251,7 +251,6 @@ class AuthController extends Controller
      *
      * @return ResponseInterface|void
      * 
-     * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function recoverAction(string $hash_code) {
         $user = Users::findByHash_code($hash_code);
@@ -273,7 +272,6 @@ class AuthController extends Controller
      *
      * @return ResponseInterface
      * 
-     * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function doRecoverAction(): ResponseInterface
     {

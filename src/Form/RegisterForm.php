@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Phlexus\Modules\BaseUser\Form;
 
-use Phlexus\Form\FormBase;
+use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
 
-class RegisterForm extends FormBase
+class RegisterForm extends CaptchaForm
 {
     /**
      * Initialize form

@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Phlexus\Modules\BaseUser\Form;
 
-use Phlexus\Form\FormBase;
+use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\Alnum;
 
-class RecoverForm extends FormBase
+class RecoverForm extends CaptchaForm
 {
     /**
      * Initialize form
