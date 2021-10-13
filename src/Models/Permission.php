@@ -6,11 +6,11 @@ namespace Phlexus\Modules\BaseUser\Models;
 use Phalcon\Mvc\Model;
 
 /**
- * Class Permissions
+ * Class Permission
  *
  * @package Phlexus\Modules\BaseUser\Models
  */
-class Permissions extends Model
+class Permission extends Model
 {
     public $id;
 
@@ -28,7 +28,7 @@ class Permissions extends Model
      */
     public function initialize()
     {
-        $this->belongsTo('profileId', Profiles::class, 'id', [
+        $this->belongsTo('profileId', Profile::class, 'id', [
             'alias' => 'profile',
         ]);
     }

@@ -8,13 +8,13 @@ use Phalcon\DI;
 use Phalcon\Security;
 
 /**
- * Class Users
+ * Class User
  *
  * @package Phlexus\Modules\BaseUser\Models
  * 
  * @ToDo: Only fetch enabled users, if status not specified
  */
-class Users extends Model
+class User extends Model
 {
     const MAX_ATTEMPTS = 5;
 
@@ -53,7 +53,7 @@ class Users extends Model
      */
     public function initialize()
     {
-        $this->hasOne('profileId', Profiles::class, 'id', [
+        $this->hasOne('profileId', Profile::class, 'id', [
             'alias'    => 'profile',
             'reusable' => true,
         ]);

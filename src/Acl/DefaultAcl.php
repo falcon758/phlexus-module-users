@@ -7,8 +7,8 @@ use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Enum;
 use Phalcon\Acl\Role;
 use Phalcon\Acl\Component;
-use Phlexus\Modules\BaseUser\Models\Users;
-use Phlexus\Modules\BaseUser\Models\Profiles;
+use Phlexus\Modules\BaseUser\Models\User;
+use Phlexus\Modules\BaseUser\Models\Profile;
 
 final class DefaultAcl extends Memory
 {
@@ -19,16 +19,16 @@ final class DefaultAcl extends Memory
 
         $this->setDefaultAction(Enum::DENY);
 
-        $profile = Profiles::getUserProfile();
+        $profile = Profile::getUserProfile();
 
         if(!$profile->id) {
-            $profile = Profiles::findFirstByname(Profiles::GUEST);
+            $profile = Profile::findFirstByname(Profile::GUEST);
         }
 
         $this->loadPermissions($profile);
     }
 
-    private function loadPermissions(Profiles $profile): void {
+    private function loadPermissions(Profile $profile): void {
         $this->addRole(new Role($profile->name));
 
         foreach($profile->getPermissions() as $permission) {

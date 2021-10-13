@@ -8,11 +8,11 @@ use Phalcon\Mvc\Model\Relation;
 use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
- * Class Profiles
+ * Class Profile
  *
  * @package Phlexus\Modules\BaseUser\Models
  */
-class Profiles extends Model
+class Profile extends Model
 {
     public const ADMIN = 'admin';
 
@@ -33,14 +33,14 @@ class Profiles extends Model
      */
     public function initialize()
     {
-        $this->hasMany('id', Users::class, 'profileId', [
+        $this->hasMany('id', User::class, 'profileId', [
             'alias'      => 'users',
             'foreignKey' => [
                 'message' => 'Profile is being used on Users',
             ],
         ]);
 
-        $this->hasMany('id', Permissions::class, 'profileId', [
+        $this->hasMany('id', Permission::class, 'profileId', [
             'alias'      => 'permissions',
             'foreignKey' => [
                 'action' => Relation::ACTION_CASCADE,
@@ -68,7 +68,7 @@ class Profiles extends Model
      * @return Profiles
      */
     public static function getUserProfile(): Profiles {
-        $user = Users::getUser();
+        $user = User::getUser();
 
         if($user === null || !$user->profileId) {
             return new self;

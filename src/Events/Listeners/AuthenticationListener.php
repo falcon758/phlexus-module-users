@@ -8,7 +8,7 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\DispatcherInterface;
 use Phlexus\Libraries\Auth\AuthException;
 use Phlexus\Modules\BaseUser\Module as UserModule;
-use Phlexus\Modules\BaseUser\Models\Users as UserModel;
+use Phlexus\Modules\BaseUser\Models\User as UserModel;
 use Phlexus\Libraries\Auth\Manager as AuthManager;
 use Phlexus\Helpers;
 

@@ -9,8 +9,8 @@ use Phlexus\Modules\BaseUser\Form\RegisterForm;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
-use Phlexus\Modules\BaseUser\Models\Users;
-use Phlexus\Modules\BaseUser\Models\Profiles;
+use Phlexus\Modules\BaseUser\Models\User;
+use Phlexus\Modules\BaseUser\Models\Profile;
 use Phlexus\Helpers;
 
 /**
@@ -59,18 +59,18 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user = Users::findFirstByEmail($email);
+        $user = User::findFirstByEmail($email);
 
         // Email already registered
         if ($user) {
             return $this->response->redirect('user/auth/create');
         }
 
-        $new_user            = new Users();
+        $new_user            = new User();
         $new_user->email     = $post['email'];
         $new_user->password  = $post['password'];
-        $new_user->active    = Users::DISABLED;
-        $new_user->profileId = Profiles::MEMBER;
+        $new_user->active    = User::DISABLED;
+        $new_user->profileId = Profile::MEMBER;
 
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
         $user->hash_code = $hash_code;
@@ -99,10 +99,10 @@ class AuthController extends Controller
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function activateAction(string $hash_code) {
-        $user = Users::findFirst([
+        $user = User::findFirst([
             'conditions' => "status = :status: AND hash_code = :hash_code:",
             'bind'       => [
-                'status'  => Users::DISABLED,
+                'status'  => User::DISABLED,
                 'hash_code'  => $hash_code
             ],
         ]);
@@ -112,7 +112,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user->status    = Users::ENABLED;
+        $user->status    = User::ENABLED;
         $user->hash_code = null;
 
         if (!$user->save()) {
@@ -156,7 +156,7 @@ class AuthController extends Controller
         $email    = $post['email'];
         $password = $post['password'];
 
-        $user = Users::findFirstByEmail($email);
+        $user = User::findFirstByEmail($email);
 
         $login = $this->auth->login([
             'email' => $email,
@@ -225,7 +225,7 @@ class AuthController extends Controller
 
         $email = $post['email'];
 
-        $user = Users::findFirstByEmail($email);
+        $user = User::findFirstByEmail($email);
 
         if (!$user || $user->hash_code !== null) {
             return $this->response->redirect('user/auth');
@@ -253,7 +253,7 @@ class AuthController extends Controller
      * 
      */
     public function recoverAction(string $hash_code) {
-        $user = Users::findByHash_code($hash_code);
+        $user = User::findByHash_code($hash_code);
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
@@ -291,7 +291,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/remind');
         }
 
-        $user = Users::findByHash_code($hash_code);
+        $user = User::findByHash_code($hash_code);
 
         // Assure that only one hash is found
         if (count($user) !== 1) {

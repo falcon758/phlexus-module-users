@@ -5,7 +5,7 @@ namespace Phlexus\Modules\BaseUser\Acl;
 
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
-use Phlexus\Modules\BaseUser\Models\Profiles;
+use Phlexus\Modules\BaseUser\Models\Profile;
 use Phalcon\Mvc\Dispatcher\Exception as MvcDispatcherException;
 
 final class Acl
@@ -14,10 +14,10 @@ final class Acl
 
     public function __construct(DefaultAcl $acl, Dispatcher $dispatcher, View $view)
     {
-        $profile = Profiles::getUserProfile();
+        $profile = Profile::getUserProfile();
 
         if(!$profile->id) {
-            $profile = Profiles::GUEST;
+            $profile = Profile::GUEST;
         } else {
             $profile = $profile->name;
         }
