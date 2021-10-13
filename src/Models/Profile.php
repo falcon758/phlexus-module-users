@@ -14,6 +14,11 @@ use Phalcon\Mvc\Model\Resultset\Simple;
  */
 class Profile extends Model
 {
+
+    const DISABLED = 0;
+
+    const ENABLED = 1;
+
     public const ADMIN = 'admin';
 
     public const MEMBER = 'member';
@@ -33,6 +38,8 @@ class Profile extends Model
      */
     public function initialize()
     {
+        $this->setSource('profiles');
+
         $this->hasMany('id', User::class, 'profileId', [
             'alias'      => 'users',
             'foreignKey' => [

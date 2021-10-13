@@ -53,6 +53,8 @@ class User extends Model
      */
     public function initialize()
     {
+        $this->setSource('users');
+
         $this->hasOne('profileId', Profile::class, 'id', [
             'alias'    => 'profile',
             'reusable' => true,

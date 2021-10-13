@@ -12,6 +12,10 @@ use Phalcon\Mvc\Model;
  */
 class Permission extends Model
 {
+    const DISABLED = 0;
+
+    const ENABLED = 1;
+
     public $id;
 
     public $profileId;
@@ -19,6 +23,8 @@ class Permission extends Model
     public $resource;
 
     public $action;
+
+    public $active
     
 
     /**
@@ -28,6 +34,8 @@ class Permission extends Model
      */
     public function initialize()
     {
+        $this->setSource('permissions');
+
         $this->belongsTo('profileId', Profile::class, 'id', [
             'alias' => 'profile',
         ]);
