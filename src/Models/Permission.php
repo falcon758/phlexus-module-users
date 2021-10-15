@@ -24,7 +24,7 @@ class Permission extends Model
 
     public $action;
 
-    public $active
+    public $active;
     
 
     /**

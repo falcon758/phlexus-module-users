@@ -121,9 +121,9 @@ class User extends Model
     /**
      * Get Current User
      *
-     * @return Users
+     * @return User
      */
-    public static function getUser(): Users {
+    public static function getUser(): User {
         $auth = DI::getDefault()->getShared('auth');
 
         $userId = (int) $auth->getIdentity();

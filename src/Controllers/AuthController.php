@@ -313,12 +313,12 @@ class AuthController extends Controller
     /**
      * Send Activate Email
      * 
-     * @param Users $users Users model
+     * @param User $user User model
      * @param string $code Hash Code
      *
      * @return bool
      */
-    private function sendActivateEmail(Users $user, string $code) {
+    private function sendActivateEmail(User $user, string $code) {
         $url = $this->url->get('user/auth/activate', ['hash' => $code]);
 
         $body = $this->view->getPartial('emails/auth/activate', ['url' => $url]);
@@ -340,12 +340,12 @@ class AuthController extends Controller
     /**
      * Send Remind Email
      * 
-     * @param Users $users Users model
+     * @param User $user User model
      * @param string $code Hash Code
      *
      * @return bool
      */
-    private function sendRemindEmail(Users $user, string $code) {
+    private function sendRemindEmail(User $user, string $code) {
         $url = $this->url->get('user/auth/recover', ['hash' => $code]);
 
         $body = $this->view->getPartial('emails/auth/remind', ['url' => $url]);
