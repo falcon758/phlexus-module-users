@@ -27,9 +27,15 @@ abstract class AbstractController extends Controller
      */
     public function getBasePosition(): string
     {
-        $module = $this->dispatcher->getModuleName();
-        $controller = $this->dispatcher->getControllerName();
+        $module = strtolower($this->dispatcher->getModuleName());
+        $controller = strtolower($this->dispatcher->getControllerName());
 
-        return strtolower($module) . '/' . strtolower($controller);
+        if ($module !== $controller) {
+            $basePosition = $module . '/' . $controller;
+        } else {
+            $basePosition = $controller;
+        }
+
+        return $basePosition;
     }
 }
