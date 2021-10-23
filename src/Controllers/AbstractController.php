@@ -36,6 +36,6 @@ abstract class AbstractController extends Controller
             $basePosition = $controller;
         }
 
-        return $basePosition;
+        return '/' . $basePosition;
     }
 }
