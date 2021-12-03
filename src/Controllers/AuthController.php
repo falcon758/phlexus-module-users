@@ -100,9 +100,9 @@ class AuthController extends Controller
      */
     public function activateAction(string $hash_code) {
         $user = User::findFirst([
-            'conditions' => "status = :status: AND hash_code = :hash_code:",
+            'conditions' => "active = :active: AND hash_code = :hash_code:",
             'bind'       => [
-                'status'  => User::DISABLED,
+                'active'  => User::DISABLED,
                 'hash_code'  => $hash_code
             ],
         ]);
