@@ -59,7 +59,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user = User::findFirstByEmail($email);
+        $user = User::findFirstByEmail($post['email']);
 
         // Email already registered
         if ($user) {
@@ -79,7 +79,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        if (!$this->sendActivateEmail($user, $hash_code)) {
+        if (!$this->sendActivateEmail($new_user, $hash_code)) {
             $new_user->delete();
 
             return $this->response->redirect('user/auth/create');
