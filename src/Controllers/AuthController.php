@@ -70,10 +70,10 @@ class AuthController extends Controller
         $new_user->email     = $post['email'];
         $new_user->password  = $post['password'];
         $new_user->active    = User::DISABLED;
-        $new_user->profileId = Profile::MEMBER;
+        $new_user->profileId = Profile::MEMBERID;
 
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
-        $user->hash_code = $hash_code;
+        $new_user->hash_code = $hash_code;
 
         if (!$new_user->save()) {
             return $this->response->redirect('user/auth/create');

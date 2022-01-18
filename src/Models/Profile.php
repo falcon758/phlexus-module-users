@@ -19,6 +19,12 @@ class Profile extends Model
 
     const ENABLED = 1;
 
+    public const ADMINID = 1;
+
+    public const MEMBERID = 2;
+
+    public const GUESTID = 3;
+
     public const ADMIN = 'admin';
 
     public const MEMBER = 'member';
@@ -90,6 +96,6 @@ class Profile extends Model
      * @return bool
      */
     public function isAdmin() {
-        return $this->name === self::ADMIN;
+        return $this->id === self::ADMINID;
     }
 }
