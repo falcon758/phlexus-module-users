@@ -321,7 +321,11 @@ class AuthController extends Controller
     private function sendActivateEmail(User $user, string $code) {
         $url = $this->url->get('user/auth/activate', ['hash' => $code]);
 
-        $body = $this->view->getPartial('emails/auth/activate', ['url' => $url]);
+        $view = $this->view;
+
+        $view->setViewsDir($this->view->getViewsDir() . 'emails/');
+
+        $body = $view->getRender('auth', 'activate', ['url' => $url]);
 
         $mail = $this->di->getShared('email');
 
