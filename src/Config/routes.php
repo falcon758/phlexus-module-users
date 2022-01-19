@@ -25,7 +25,7 @@ $routes->addPost('/user/auth/doCreate', [
     'action' => 'doCreate',
 ]);
 
-$routes->addPost('/user/auth/activate', [
+$routes->addGet('/user/auth/activate/{hash_code:[0-9a-zA-Z]+}', [
     'controller' => 'auth',
     'action' => 'activate',
 ]);

@@ -98,7 +98,7 @@ class AuthController extends Controller
      * 
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
-    public function activateAction(string $hash_code) {
+    public function activateAction(string $hash_code) {        
         $user = User::findFirst([
             'conditions' => "active = :active: AND hash_code = :hash_code:",
             'bind'       => [
@@ -112,7 +112,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user->status    = User::ENABLED;
+        $user->active    = User::ENABLED;
         $user->hash_code = null;
 
         if (!$user->save()) {
@@ -319,7 +319,7 @@ class AuthController extends Controller
      * @return bool
      */
     private function sendActivateEmail(User $user, string $code) {
-        $url = $this->url->get('user/auth/activate', ['hash' => $code]);
+        $url = $this->url->get('user/auth/activate/' . $code);
 
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
@@ -339,7 +339,7 @@ class AuthController extends Controller
      * @return bool
      */
     private function sendRemindEmail(User $user, string $code) {
-        $url = $this->url->get('user/auth/recover', ['hash' => $code]);
+        $url = $this->url->get('user/auth/recover/' . $code);
 
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
