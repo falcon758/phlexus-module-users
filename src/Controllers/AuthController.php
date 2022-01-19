@@ -11,7 +11,7 @@ use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Models\Profile;
-use Phlexus\Helpers;
+use Phlexus\Libraries\Helpers;
 
 /**
  * Class AuthController
@@ -321,24 +321,13 @@ class AuthController extends Controller
     private function sendActivateEmail(User $user, string $code) {
         $url = $this->url->get('user/auth/activate', ['hash' => $code]);
 
-        $view = $this->view;
-
-        $view->setViewsDir($this->view->getViewsDir() . 'emails/');
-
-        $body = $view->getRender('auth', 'activate', ['url' => $url]);
-
-        $mail = $this->di->getShared('email');
-
-        // If not inside Phlexus cms
-        if (!$mail) {
+        try {
+            $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
+        } catch(\Exception $e) {
             return false;
         }
 
-        $mail->addAddress($user->email);
-        $mail->Subject = 'Account Activation';
-        $mail->Body    = $body;
-
-        return $mail->send();
+        return Helpers::sendEmail($user->email, 'Account Activation', $body);
     }
 
     /**
@@ -352,19 +341,12 @@ class AuthController extends Controller
     private function sendRemindEmail(User $user, string $code) {
         $url = $this->url->get('user/auth/recover', ['hash' => $code]);
 
-        $body = $this->view->getPartial('emails/auth/remind', ['url' => $url]);
-
-        $mail = $this->di->getShared('email');
-
-        // If not inside Phlexus cms
-        if (!$mail) {
+        try {
+            $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
+        } catch(\Exception $e) {
             return false;
         }
 
-        $mail->addAddress($user->email);
-        $mail->Subject = 'Password Reminder';
-        $mail->Body    = $body;
-
-        return $mail->send();
+        return Helpers::sendEmail($user->email, 'Password Reminder', $body);
     }
 }
