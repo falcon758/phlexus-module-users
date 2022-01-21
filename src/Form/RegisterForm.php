@@ -48,10 +48,12 @@ class RegisterForm extends CaptchaForm
         
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
-        $repeat_password->addValidator(new Identical(array(
+        $repeat_password->addValidator(
+            new Identical([
             'value' => $password->getValue(),
             'message' => 'Passwords not equal'
-        )));
+            ])
+        );
 
         $this->add($email);
         $this->add($password);

@@ -56,6 +56,10 @@ class AuthController extends Controller
         $post = $this->request->getPost();
 
         if (!$form->isValid($post)) {
+            foreach ($form->getMessages() as $message) {
+                $this->flash->error($message->getMessage());
+            }
+
             return $this->response->redirect('user/auth/create');
         }
 
@@ -150,6 +154,10 @@ class AuthController extends Controller
         $post = $this->request->getPost();
 
         if (!$form->isValid($post)) {
+            foreach ($form->getMessages() as $message) {
+                $this->flash->error($message->getMessage());
+            }
+
             return $this->response->redirect('user/auth');
         }
 
@@ -168,6 +176,7 @@ class AuthController extends Controller
                 $user->failedLogin();
             }
 
+            $this->flash->error('Login failed!');
             return $this->response->redirect('user/auth');
         }
 
@@ -220,6 +229,10 @@ class AuthController extends Controller
         $post = $this->request->getPost();
 
         if (!$form->isValid($post)) {
+            foreach ($form->getMessages() as $message) {
+                $this->flash->error($message->getMessage());
+            }
+
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -288,6 +301,10 @@ class AuthController extends Controller
         $hash_code = $post['hash_code'];
 
         if (!$form->isValid($post)) {
+            foreach ($form->getMessages() as $message) {
+                $this->flash->error($message->getMessage());
+            }
+
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -324,6 +341,7 @@ class AuthController extends Controller
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
         } catch(\Exception $e) {
+            $this->flash->error('Activation failed!');
             return false;
         }
 
@@ -344,6 +362,7 @@ class AuthController extends Controller
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
         } catch(\Exception $e) {
+            $this->flash->error('Reminder failed!');
             return false;
         }
 

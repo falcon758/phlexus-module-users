@@ -52,12 +52,12 @@ class RecoverForm extends CaptchaForm
 
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
-        $repeat_password->addValidator(new PresenceOf(['message' => 'Password is required']));
-
-        $repeat_password->addValidator(new Identical(array(
-            'value' => $password->getValue(),
-            'message' => 'Passwords not equal'
-        )));
+        $repeat_password->addValidator(
+            new Identical([
+                'value' => $password->getValue(),
+                'message' => 'Passwords not equal'
+            ])
+        );
 
         $this->add($hash_code);
         $this->add($password);
