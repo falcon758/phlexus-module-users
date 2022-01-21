@@ -21,7 +21,7 @@ final class DefaultAcl extends Memory
 
         $profile = Profile::getUserProfile();
 
-        if(!$profile->id) {
+        if (!$profile->id) {
             $profile = Profile::findFirstById(Profile::GUESTID);
         }
 
@@ -31,7 +31,7 @@ final class DefaultAcl extends Memory
     private function loadPermissions(Profile $profile): void {
         $this->addRole(new Role($profile->name));
 
-        foreach($profile->getPermission() as $permission) {
+        foreach ($profile->getPermission() as $permission) {
             $this->addComponent(new Component($permission->resource), $permission->action);
             $this->allow($profile->name, $permission->resource, $permission->action);
         }

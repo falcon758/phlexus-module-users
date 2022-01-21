@@ -36,7 +36,7 @@ final class AuthenticationListener extends Injectable
         $this->getDI()->getShared('eventsManager')->attach(
             'auth:beforeLogin',
             function (Event $event, AuthManager $manager, $data) {
-                if(!isset($data['email'])) {
+                if (!isset($data['email'])) {
                     return false;
                 }
 

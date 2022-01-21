@@ -16,7 +16,7 @@ final class Acl
     {
         $profile = Profile::getUserProfile();
 
-        if(!$profile->id) {
+        if (!$profile->id) {
             $profile = Profile::GUEST;
         } else {
             $profile = $profile->name;
@@ -27,8 +27,8 @@ final class Acl
         $action = $dispatcher->getActionName();
 
         $component = strtolower($module . '_' . $controller);
-        if($acl->isComponent($component)) {
-            if($acl->isAllowed($profile, $component, strtolower($action))) {
+        if ($acl->isComponent($component)) {
+            if ($acl->isAllowed($profile, $component, strtolower($action))) {
                 $this->isAllowed = true;
             }
         } else {

@@ -79,7 +79,7 @@ class User extends Model
      */
     public function beforeSave()
     {
-        if($this->password !== null && $this->storePassword !== $this->password) {
+        if ($this->password !== null && $this->storePassword !== $this->password) {
             $security = new Security();
             $this->password = $security->hash($this->password);
         }
@@ -107,7 +107,7 @@ class User extends Model
      */
     public function failedLogin()
     {
-        if(!$this->id) { return false; }
+        if (!$this->id) { return false; }
 
         $ts = date('Y-m-d H:i:s', time());
 
@@ -128,7 +128,7 @@ class User extends Model
 
         $userId = (int) $auth->getIdentity();
 
-        if($userId === 0) {
+        if ($userId === 0) {
             return new self;
         }
 
@@ -145,7 +145,7 @@ class User extends Model
     public static function canLogin(string $email): bool {
         $user = self::findFirstByEmail($email);
 
-        if(!$user || $user->active === 0 || $user->attempts >= self::MAX_ATTEMPTS) {
+        if (!$user || $user->active === 0 || $user->attempts >= self::MAX_ATTEMPTS) {
             return false;
         }
 

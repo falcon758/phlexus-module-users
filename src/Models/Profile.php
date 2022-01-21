@@ -83,7 +83,7 @@ class Profile extends Model
     public static function getUserProfile(): Profile {
         $user = User::getUser();
 
-        if($user === null || !$user->profileId) {
+        if ($user === null || !$user->profileId) {
             return new self;
         }
 
@@ -96,6 +96,6 @@ class Profile extends Model
      * @return bool
      */
     public function isAdmin() {
-        return $this->id === self::ADMINID;
+        return ((int) $this->id) === self::ADMINID;
     }
 }
