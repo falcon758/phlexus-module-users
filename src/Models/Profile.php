@@ -15,9 +15,9 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 class Profile extends Model
 {
 
-    const DISABLED = 0;
+    public const DISABLED = 0;
 
-    const ENABLED = 1;
+    public const ENABLED = 1;
 
     public const ADMINID = 1;
 

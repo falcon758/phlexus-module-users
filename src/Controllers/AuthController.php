@@ -20,7 +20,7 @@ use Phlexus\Libraries\Helpers;
  */
 class AuthController extends Controller
 {
-    const HASHLENGTH = 40;
+    private const HASHLENGTH = 40;
 
     public function initialize(): void
     {
@@ -48,6 +48,8 @@ class AuthController extends Controller
         $this->view->disable();
 
         if (!$this->request->isPost()) {
+            $this->flash->error('Invalid data sent!');
+
             return $this->response->redirect('user/auth/create');
         }
 
@@ -67,6 +69,8 @@ class AuthController extends Controller
 
         // Email already registered
         if ($user) {
+            $this->flash->error('Email already exists!');
+
             return $this->response->redirect('user/auth/create');
         }
 
@@ -80,6 +84,8 @@ class AuthController extends Controller
         $new_user->hash_code = $hash_code;
 
         if (!$new_user->save()) {
+            $this->flash->error('Unable to create account!');
+
             return $this->response->redirect('user/auth/create');
         }
 
@@ -88,6 +94,8 @@ class AuthController extends Controller
 
             return $this->response->redirect('user/auth/create');
         }
+
+        $this->flash->success('Account created successfully!');
 
         return $this->response->redirect('user/auth');
     }
@@ -113,6 +121,8 @@ class AuthController extends Controller
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
+            $this->flash->error('Unable to proccess account activation!');
+
             return $this->response->redirect('user/auth/create');
         }
 
@@ -120,8 +130,12 @@ class AuthController extends Controller
         $user->hash_code = null;
 
         if (!$user->save()) {
+            $this->flash->error('Unable to activate account!');
+
             return $this->response->redirect('user/auth/create');
         }
+
+        $this->flash->success('Account activated successfully!');
 
         return $this->response->redirect('user/auth');
     }
@@ -241,6 +255,8 @@ class AuthController extends Controller
         $user = User::findFirstByEmail($email);
 
         if (!$user || $user->hash_code !== null) {
+            $this->flash->error('Unable to proccess reminder!');
+
             return $this->response->redirect('user/auth');
         }
 
@@ -253,6 +269,8 @@ class AuthController extends Controller
         if (!$this->sendRemindEmail($user, $hash_code)) {
             return $this->response->redirect('user/auth/remind');
         }
+
+        $this->flash->success('Please confirm email to recover your password!');
 
         return $this->response->redirect('user/auth');
     }
@@ -270,6 +288,8 @@ class AuthController extends Controller
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
+            $this->flash->error('Unable to procceed with recover proccess!');
+
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -291,6 +311,8 @@ class AuthController extends Controller
         $this->view->disable();
 
         if (!$this->request->isPost()) {
+            $this->flash->error('Invalid data sent!');
+
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -312,6 +334,8 @@ class AuthController extends Controller
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
+            $this->flash->error('Unable to procceed with recover proccess!');
+
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -321,8 +345,12 @@ class AuthController extends Controller
         $user->hash_code = null;
 
         if (!$user->save()) {
+            $this->flash->error('Unable to procceed with recover proccess!');
+
             return $this->response->redirect('user/auth/remind');
         }
+
+        $this->flash->success('Account recovered successfully!');
 
         return $this->response->redirect('user/auth');
     }
@@ -342,6 +370,7 @@ class AuthController extends Controller
             $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
         } catch(\Exception $e) {
             $this->flash->error('Activation failed!');
+
             return false;
         }
 

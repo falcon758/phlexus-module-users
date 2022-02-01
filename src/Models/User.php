@@ -16,11 +16,11 @@ use Phalcon\Security;
  */
 class User extends Model
 {
-    const MAX_ATTEMPTS = 5;
+    private const MAX_ATTEMPTS = 5;
 
-    const DISABLED = 0;
+    public const DISABLED = 0;
 
-    const ENABLED = 1;
+    public const ENABLED = 1;
 
     private $storePassword;
 
