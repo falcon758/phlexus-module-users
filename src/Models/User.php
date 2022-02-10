@@ -86,6 +86,30 @@ class User extends Model
     }
 
     /**
+     * Create User
+     * 
+     * @param string $email    User email
+     * @param string $password User password
+     * @param string $hashCode User hashCode
+     *
+     * @return mixed User Model or null
+     */
+    public function createUser(string $email, string $password, string $hashCode)
+    {
+        $this->email     = $email;
+        $this->password  = $password;
+        $this->active    = User::DISABLED;
+        $this->profileId = Profile::MEMBERID;
+        $this->hash_code = $hashCode;
+
+        if (!$this->save()) {
+            return null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Register successfull login
      *
      * @return bool
@@ -114,9 +138,46 @@ class User extends Model
         $this->lastFailedLoginAt = $ts;
         $this->attempts = intval($this->attempts) + 1;
         
-        return$this->save();
+        return $this->save();
     }
-    
+
+    /**
+     * Activate User
+     * 
+     * @return bool
+     */
+    public function activateUser(): bool {
+        $this->active    = User::ENABLED;
+        $this->hash_code = null;
+
+        return $this->save();
+    }
+
+    /**
+     * Change user password
+     * 
+     * @param string $password User password to set
+     * 
+     * @return bool
+     */
+    public function changePassword(string $password): bool {
+        $this->password  = $password;
+        $this->hash_code = null;
+
+        return $this->save();
+    }
+
+    /**
+     * Set user HashCode
+     *
+     * @param string $hashCode User HashCode
+     * 
+     * @return bool
+     */
+    public function setHashCode(string $hashCode): bool {
+        $this->hash_code = $hashCode;
+        return $this->save();
+    }
 
     /**
      * Get Current User
@@ -133,6 +194,23 @@ class User extends Model
         }
 
         return self::findFirstByid($userId);
+    }
+
+    /**
+     * Get user to activate
+     * 
+     * @param string $hashCode Hash code to search
+     * 
+     * @return User
+     */
+    public static function getActivateUser(string $hashCode): User {
+        return self::findFirst([
+            'conditions' => "active = :active: AND hash_code = :hash_code:",
+            'bind'       => [
+                'active'  => self::DISABLED,
+                'hash_code'  => $hashCode
+            ],
+        ]);
     }
 
     /**

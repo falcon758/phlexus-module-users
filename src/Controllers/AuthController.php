@@ -10,7 +10,6 @@ use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\User;
-use Phlexus\Modules\BaseUser\Models\Profile;
 use Phlexus\Libraries\Helpers;
 
 /**
@@ -74,16 +73,11 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $new_user            = new User();
-        $new_user->email     = $post['email'];
-        $new_user->password  = $post['password'];
-        $new_user->active    = User::DISABLED;
-        $new_user->profileId = Profile::MEMBERID;
-
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
-        $new_user->hash_code = $hash_code;
 
-        if (!$new_user->save()) {
+        $new_user = (new User())->createUser($post['email'], $post['password'], $hash_code);
+
+        if (!$new_user) {
             $this->flash->error('Unable to create account!');
 
             return $this->response->redirect('user/auth/create');
@@ -111,25 +105,16 @@ class AuthController extends Controller
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
     public function activateAction(string $hash_code) {        
-        $user = User::findFirst([
-            'conditions' => "active = :active: AND hash_code = :hash_code:",
-            'bind'       => [
-                'active'  => User::DISABLED,
-                'hash_code'  => $hash_code
-            ],
-        ]);
+        $user = User::getActivateUser($hash_code);
 
-        // Assure that only one hash is found
-        if (count($user) !== 1) {
+        // Assure that hash code exists
+        if (!$user) {
             $this->flash->error('Unable to proccess account activation!');
 
             return $this->response->redirect('user/auth/create');
         }
 
-        $user->active    = User::ENABLED;
-        $user->hash_code = null;
-
-        if (!$user->save()) {
+        if (!$user->activateUser()) {
             $this->flash->error('Unable to activate account!');
 
             return $this->response->redirect('user/auth/create');
@@ -262,9 +247,7 @@ class AuthController extends Controller
 
         $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
 
-        $user->hash_code = $hash_code;
-
-        $user->save();
+        $user->setHashCode($hash_code);
 
         if (!$this->sendRemindEmail($user, $hash_code)) {
             return $this->response->redirect('user/auth/remind');
@@ -341,10 +324,7 @@ class AuthController extends Controller
 
         $user = $user[0];
 
-        $user->password  = $post['password'];
-        $user->hash_code = null;
-
-        if (!$user->save()) {
+        if (!$user->changePassword($post['password'])) {
             $this->flash->error('Unable to procceed with recover proccess!');
 
             return $this->response->redirect('user/auth/remind');
