@@ -46,14 +46,14 @@ class Profile extends Model
     {
         $this->setSource('profiles');
 
-        $this->hasMany('id', User::class, 'profileId', [
+        $this->hasMany('id', User::class, 'profileID', [
             'alias'      => 'user',
             'foreignKey' => [
                 'message' => 'Profile is being used on User',
             ],
         ]);
 
-        $this->hasMany('id', Permission::class, 'profileId', [
+        $this->hasMany('id', Permission::class, 'profileID', [
             'alias'      => 'permission',
             'foreignKey' => [
                 'action' => Relation::ACTION_CASCADE,
@@ -83,11 +83,11 @@ class Profile extends Model
     public static function getUserProfile(): Profile {
         $user = User::getUser();
 
-        if ($user === null || !$user->profileId) {
+        if ($user === null || !$user->profileID) {
             return new self;
         }
 
-        return self::findFirstByid($user->profileId);
+        return self::findFirstByid($user->profileID);
     }
 
     /**

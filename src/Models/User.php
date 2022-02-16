@@ -44,7 +44,7 @@ class User extends Model
 
     public $modifiedAt;
 
-    public $profileId;
+    public $profileID;
 
     /**
      * Initialize
@@ -55,7 +55,7 @@ class User extends Model
     {
         $this->setSource('users');
 
-        $this->hasOne('profileId', Profile::class, 'id', [
+        $this->hasOne('profileID', Profile::class, 'id', [
             'alias'    => 'profile',
             'reusable' => true,
         ]);
@@ -99,7 +99,7 @@ class User extends Model
         $this->email     = $email;
         $this->password  = $password;
         $this->active    = User::DISABLED;
-        $this->profileId = Profile::MEMBERID;
+        $this->profileID = Profile::MEMBERID;
         $this->hash_code = $hashCode;
 
         if (!$this->save()) {
@@ -187,13 +187,13 @@ class User extends Model
     public static function getUser(): User {
         $auth = DI::getDefault()->getShared('auth');
 
-        $userId = (int) $auth->getIdentity();
+        $userID = (int) $auth->getIDentity();
 
-        if ($userId === 0) {
+        if ($userID === 0) {
             return new self;
         }
 
-        return self::findFirstByid($userId);
+        return self::findFirstByid($userID);
     }
 
     /**

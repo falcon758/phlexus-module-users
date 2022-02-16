@@ -18,7 +18,7 @@ class Permission extends Model
 
     public $id;
 
-    public $profileId;
+    public $profileID;
 
     public $resource;
 
@@ -36,7 +36,7 @@ class Permission extends Model
     {
         $this->setSource('permissions');
 
-        $this->belongsTo('profileId', Profile::class, 'id', [
+        $this->belongsTo('profileID', Profile::class, 'id', [
             'alias' => 'profile',
         ]);
     }

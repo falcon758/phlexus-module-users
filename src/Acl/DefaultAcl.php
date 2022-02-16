@@ -22,7 +22,7 @@ final class DefaultAcl extends Memory
         $profile = Profile::getUserProfile();
 
         if (!$profile->id) {
-            $profile = Profile::findFirstById(Profile::GUESTID);
+            $profile = Profile::findFirstByid(Profile::GUESTID);
         }
 
         $this->loadPermissions($profile);
