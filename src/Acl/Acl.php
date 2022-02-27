@@ -8,10 +8,18 @@ use Phalcon\Mvc\View;
 use Phlexus\Modules\BaseUser\Models\Profile;
 use Phalcon\Mvc\Dispatcher\Exception as MvcDispatcherException;
 
+/**
+ * Acl
+ *
+ * @package Phlexus\Modules\BaseUser\Acl
+ */
 final class Acl
 {
     private $isAllowed = false;
 
+    /**
+     * Construct
+     */
     public function __construct(DefaultAcl $acl, Dispatcher $dispatcher, View $view)
     {
         $profile = Profile::getUserProfile();
@@ -36,6 +44,11 @@ final class Acl
         }
     }
 
+    /**
+     * Is user allowed
+     * 
+     * @return bool
+     */
     public function isAllowed(): bool
     {
         return $this->isAllowed;

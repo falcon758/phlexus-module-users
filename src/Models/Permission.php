@@ -16,14 +16,29 @@ class Permission extends Model
 
     public const ENABLED = 1;
 
+    /**
+     * @var int
+     */
     public $id;
 
+    /**
+     * @var int
+     */
     public $profileID;
 
+    /**
+     * @var string
+     */
     public $resource;
 
+    /**
+     * @var string
+     */
     public $action;
 
+    /**
+     * @var int
+     */
     public $active;
     
 

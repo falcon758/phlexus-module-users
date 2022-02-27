@@ -29,6 +29,8 @@ use Phlexus\Helpers;
 class Module extends PhlexusModule
 {
     /**
+     * Get Module Name
+     * 
      * @return string
      */
     public static function getModuleName(): string
@@ -39,6 +41,8 @@ class Module extends PhlexusModule
     }
 
     /**
+     * Get Handlers Namespace
+     * 
      * @return string
      */
     public static function getHandlersNamespace(): string
@@ -65,7 +69,10 @@ class Module extends PhlexusModule
     }
 
     /**
+     * Register Services
+     * 
      * @param DiInterface|null $di
+     *
      * @return void
      */
     public function registerServices(DiInterface $di = null): void

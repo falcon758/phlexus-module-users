@@ -31,10 +31,19 @@ class Profile extends Model
 
     public const GUEST = 'guest';
 
+    /**
+     * @var int
+     */
     public $id;
 
+    /**
+     * @var string
+     */
     public $name;
 
+    /**
+     * @var int
+     */
     public $active;
 
     /**

@@ -25,28 +25,64 @@ class User extends Model
 
     private $storePassword;
 
+    /**
+     * @var int
+     */
     public $id;
 
+    /**
+     * @var string
+     */
     public $email;
 
+    /**
+     * @var string
+     */
     public $password;
 
+    /**
+     * @var string
+     */
     public $user_hash;
-
+    
+    /**
+     * @var string
+     */
     public $hash_code;
 
+    /**
+     * @var int
+     */
     public $active;
 
+    /**
+     * @var int
+     */
     public $attempts;
 
+    /**
+     * @var string
+     */
     public $lastLoginAt;
 
+    /**
+     * @var string
+     */
     public $lastFailedLoginAt;
 
+    /**
+     * @var string
+     */
     public $createdAt;
 
+    /**
+     * @var string
+     */
     public $modifiedAt;
 
+    /**
+     * @var int
+     */
     public $profileID;
 
     /**
