@@ -79,7 +79,13 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        if (!$this->sendActivateEmail($new_user, $new_user->hash_code)) {
+        if (
+            !$this->sendActivateEmail(
+                $new_user,
+                $this->security->getUserTokenByHour($user->user_hash),
+                $new_user->hash_code
+            )
+        ) {
             $new_user->delete();
 
             return $this->response->redirect('user/auth/create');
@@ -103,8 +109,12 @@ class AuthController extends Controller
     public function activateAction(string $hash_code) {        
         $user = User::getActivateUser($hash_code);
 
+        $security = $this->security;
+
+        $token = $this->request->get('token', null, '');
+
         // Assure that hash code exists
-        if (!$user) {
+        if (!$user || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
             $this->flash->error('Unable to proccess account activation!');
 
             return $this->response->redirect('user/auth/create');
@@ -243,7 +253,7 @@ class AuthController extends Controller
 
         $user->generateHashCode();
 
-        if (!$this->sendRemindEmail($user, $user->hash_code)) {
+        if (!$this->sendRemindEmail($user, $this->security->getUserTokenByHour($user->user_hash), $user->hash_code)) {
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -263,8 +273,12 @@ class AuthController extends Controller
     public function recoverAction(string $hash_code) {
         $user = User::findByHash_code($hash_code);
 
-        // Assure that only one hash is found
-        if (count($user) !== 1) {
+        $security = $this->security;
+
+        $token = $this->request->get('token', null, '');
+
+        // Assure that only one hash is found and token is correct
+        if (count($user) !== 1 || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
             $this->flash->error('Unable to procceed with recover proccess!');
 
             return $this->response->redirect('user/auth/remind');
@@ -332,13 +346,16 @@ class AuthController extends Controller
     /**
      * Send Activate Email
      * 
-     * @param User $user User model
-     * @param string $code Hash Code
+     * @param User   $user      User model
+     * @param string $userToken User Token
+     * @param string $code      Hash Code
      *
      * @return bool
      */
-    private function sendActivateEmail(User $user, string $code) {
-        $url = $this->url->get('user/auth/activate/' . $code);
+    private function sendActivateEmail(User $user, string $userToken, string $code) {
+        $url = $this->url->get('user/auth/activate/' . $code, [
+            'token' => $userToken
+        ]);
 
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
@@ -354,13 +371,16 @@ class AuthController extends Controller
     /**
      * Send Remind Email
      * 
-     * @param User $user User model
-     * @param string $code Hash Code
+     * @param User   $user      User model
+     * @param string $userToken User Token
+     * @param string $code      Hash Code
      *
      * @return bool
      */
-    private function sendRemindEmail(User $user, string $code) {
-        $url = $this->url->get('user/auth/recover/' . $code);
+    private function sendRemindEmail(User $user, string $userToken, string $code) {
+        $url = $this->url->get('user/auth/recover/' . $code, [
+            'token' => $userToken
+        ]);
 
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
