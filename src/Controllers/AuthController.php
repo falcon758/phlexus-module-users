@@ -19,8 +19,6 @@ use Phlexus\Libraries\Helpers;
  */
 class AuthController extends Controller
 {
-    private const HASHLENGTH = 40;
-
     public function initialize(): void
     {
         $this->tag->setTitle('Phlexus CMS');
@@ -73,9 +71,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
-
-        $new_user = (new User())->createUser($post['email'], $post['password'], $hash_code);
+        $new_user = (new User())->createUser($post['email'], $post['password']);
 
         if (!$new_user) {
             $this->flash->error('Unable to create account!');
@@ -83,7 +79,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        if (!$this->sendActivateEmail($new_user, $hash_code)) {
+        if (!$this->sendActivateEmail($new_user, $new_user->hash_code)) {
             $new_user->delete();
 
             return $this->response->redirect('user/auth/create');
@@ -245,11 +241,9 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth');
         }
 
-        $hash_code = $this->security->getRandom()->base64Safe(self::HASHLENGTH);
+        $user->generateHashCode();
 
-        $user->setHashCode($hash_code);
-
-        if (!$this->sendRemindEmail($user, $hash_code)) {
+        if (!$this->sendRemindEmail($user, $user->hash_code)) {
             return $this->response->redirect('user/auth/remind');
         }
 

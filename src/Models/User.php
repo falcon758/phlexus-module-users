@@ -5,7 +5,6 @@ namespace Phlexus\Modules\BaseUser\Models;
 
 use Phalcon\Mvc\Model;
 use Phalcon\DI;
-use Phalcon\Security;
 
 /**
  * Class User
@@ -16,6 +15,8 @@ use Phalcon\Security;
  */
 class User extends Model
 {
+    private const HASHLENGTH = 40;
+
     private const MAX_ATTEMPTS = 5;
 
     public const DISABLED = 0;
@@ -29,6 +30,8 @@ class User extends Model
     public $email;
 
     public $password;
+
+    public $user_hash;
 
     public $hash_code;
 
@@ -80,8 +83,7 @@ class User extends Model
     public function beforeSave()
     {
         if ($this->password !== null && $this->storePassword !== $this->password) {
-            $security = new Security();
-            $this->password = $security->hash($this->password);
+            $this->password = Di::getDefault()->getShared('security')->hash($this->password);
         }
     }
 
@@ -90,17 +92,19 @@ class User extends Model
      * 
      * @param string $email    User email
      * @param string $password User password
-     * @param string $hashCode User hashCode
      *
      * @return mixed User Model or null
      */
-    public function createUser(string $email, string $password, string $hashCode)
+    public function createUser(string $email, string $password)
     {
+        $security = Di::getDefault()->getShared('security');
+
         $this->email     = $email;
         $this->password  = $password;
         $this->active    = User::DISABLED;
         $this->profileID = Profile::MEMBERID;
-        $this->hash_code = $hashCode;
+        $this->user_hash = $security->getRandom()->base64Safe(self::HASHLENGTH);
+        $this->hash_code = $security->getRandom()->base64Safe(self::HASHLENGTH);
 
         if (!$this->save()) {
             return null;
@@ -176,6 +180,20 @@ class User extends Model
      */
     public function setHashCode(string $hashCode): bool {
         $this->hash_code = $hashCode;
+
+        return $this->save();
+    }
+
+    /**
+     * Generate user HashCode
+     *
+     * @param string $hashCode User HashCode
+     * 
+     * @return bool
+     */
+    public function generateHashCode(): bool {
+        $this->hash_code = Di::getDefault()->getShared('security')->getRandom()->base64Safe(self::HASHLENGTH);
+
         return $this->save();
     }
 
