@@ -45,9 +45,10 @@ final class DefaultAcl extends Memory
     private function loadPermissions(Profile $profile): void {
         $this->addRole(new Role($profile->name));
 
-        foreach ($profile->getPermission() as $permission) {
-            $this->addComponent(new Component($permission->resource), $permission->action);
-            $this->allow($profile->name, $permission->resource, $permission->action);
+        foreach ($profile->getProfileResource() as $profileResource) {
+            $resource = $profileResource->resource;
+            $this->addComponent(new Component($resource->resource), $resource->action);
+            $this->allow($profile->name, $resource->resource, $resource->action);
         }
     }
 }

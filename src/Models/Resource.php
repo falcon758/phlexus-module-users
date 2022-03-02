@@ -6,11 +6,11 @@ namespace Phlexus\Modules\BaseUser\Models;
 use Phalcon\Mvc\Model;
 
 /**
- * Class Permission
+ * Class Resource
  *
  * @package Phlexus\Modules\BaseUser\Models
  */
-class Permission extends Model
+class Resource extends Model
 {
     public const DISABLED = 0;
 
@@ -20,11 +20,6 @@ class Permission extends Model
      * @var int
      */
     public $id;
-
-    /**
-     * @var int
-     */
-    public $profileID;
 
     /**
      * @var string
@@ -49,10 +44,13 @@ class Permission extends Model
      */
     public function initialize()
     {
-        $this->setSource('permissions');
+        $this->setSource('resources');
 
-        $this->belongsTo('profileID', Profile::class, 'id', [
-            'alias' => 'profile',
+        $this->hasMany('id', ProfileResource::class, 'resourceID', [
+            'alias'      => 'profileResource',
+            'foreignKey' => [
+                'message' => 'Profile is being used on ProfileResource',
+            ],
         ]);
     }
 }

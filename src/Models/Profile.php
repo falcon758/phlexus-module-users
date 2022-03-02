@@ -62,8 +62,8 @@ class Profile extends Model
             ],
         ]);
 
-        $this->hasMany('id', Permission::class, 'profileID', [
-            'alias'      => 'permission',
+        $this->hasMany('id', ProfileResource::class, 'profileID', [
+            'alias'      => 'profileResource',
             'foreignKey' => [
                 'action' => Relation::ACTION_CASCADE,
             ],
