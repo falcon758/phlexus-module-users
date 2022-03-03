@@ -110,7 +110,6 @@ class User extends Model
         $this->storePassword = $this->password;
     }
 
-
     /**
      * Before Save
      *
@@ -139,8 +138,8 @@ class User extends Model
         $this->password  = $password;
         $this->active    = User::DISABLED;
         $this->profileID = Profile::MEMBERID;
-        $this->user_hash = $security->getRandom()->base64Safe(self::HASHLENGTH);
-        $this->hash_code = $security->getRandom()->base64Safe(self::HASHLENGTH);
+        $this->user_hash = $this->generateHash();
+        $this->hash_code = $this->generateHash();
 
         if (!$this->save()) {
             return null;
@@ -220,17 +219,36 @@ class User extends Model
         return $this->save();
     }
 
+
     /**
-     * Generate user HashCode
+     * Generate user Hash
      *
      * @param string $hashCode User HashCode
+     * 
+     * @return void
+     */
+    public function generateUserHash(): void {
+        $this->user_hash = $this->generateHash();
+    }
+
+    /**
+     * Generate user HashCode
      * 
      * @return bool
      */
     public function generateHashCode(): bool {
-        $this->hash_code = Di::getDefault()->getShared('security')->getRandom()->base64Safe(self::HASHLENGTH);
+        $this->hash_code = $this->generateHash();
 
         return $this->save();
+    }
+
+    /**
+     * Generate Hash
+     * 
+     * @return bool
+     */
+    public function generateHash(): string {
+        return Di::getDefault()->getShared('security')->getRandom()->base64Safe(self::HASHLENGTH);
     }
 
     /**
