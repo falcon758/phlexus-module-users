@@ -49,6 +49,11 @@ class User extends Model
      * @var string
      */
     public $hash_code;
+    
+    /**
+     * @var string
+     */
+    public $profile_image;
 
     /**
      * @var int

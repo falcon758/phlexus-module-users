@@ -29,18 +29,18 @@ class RecoverForm extends CaptchaForm
     {
         $hash_code = new Hidden('hash_code', [
             'required' => true,
-            'class' => 'form-control'
+            'class'    => 'form-control'
         ]);
 
         $password = new Password('password', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Password'
         ]);
 
         $repeat_password = new Password('repeat_password', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Repeat-Password'
         ]);
         
@@ -54,7 +54,7 @@ class RecoverForm extends CaptchaForm
         
         $repeat_password->addValidator(
             new Identical([
-                'value' => $password->getValue(),
+                'value'   => $password->getValue(),
                 'message' => 'Passwords not equal'
             ])
         );

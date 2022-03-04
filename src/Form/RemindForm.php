@@ -26,8 +26,8 @@ class RemindForm extends CaptchaForm
     public function initialize()
     {        
         $email = new Email('email', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Email'
         ]);
         

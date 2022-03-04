@@ -16,7 +16,9 @@ namespace Phlexus\Modules\BaseUser\Form;
 use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
+use Phalcon\Forms\Element\File;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\File as FileValidator;
 
 class ProfileForm extends CaptchaForm
 {
@@ -26,34 +28,50 @@ class ProfileForm extends CaptchaForm
     public function initialize()
     {        
         $email = new Email('email', [
-            'class' => 'form-control',
+            'class'       => 'form-control',
             'placeholder' => 'Email',
-            'readonly' => true
+            'readonly'    => true
         ]);
         
         $password = new Password('password', [
-            'class' => 'form-control',
+            'class'       => 'form-control',
             'placeholder' => 'Password',
         ]);
 
         $repeat_password = new Password('repeat_password', [
-            'class' => 'form-control',
+            'class'       => 'form-control',
             'placeholder' => 'Repeat-Password',
         ]);
+
+        $profile_image = new File('profile_image');
                 
         $password_value = $password->getValue();
 
-        if (!empty($password_value)) {
-            $repeat_password->addValidator(
-                new Identical([
-                    'value' => $password_value,
-                    'message' => 'Passwords not equal'
-                ])
-            );
-        }
+        $repeat_password->addValidator(
+            new Identical([
+                'allowEmpty' => true,
+                'value'      => $password->getValue(),
+                'message'    => 'Passwords not equal'
+            ])
+        );
+
+        $profile_image->addValidator(
+            new FileValidator(
+                [
+                    'allowEmpty'     => true,
+                    'maxSize'        => '2M',
+                    'allowedTypes'   => [
+                        'image/jpeg',
+                        'image/png',
+                    ],
+                    'message'         => 'Allowed file types are :types'
+                ]
+            )
+        );        
 
         $this->add($email);
         $this->add($password);
         $this->add($repeat_password);
+        $this->add($profile_image);
     }
 }

@@ -27,20 +27,20 @@ class RegisterForm extends CaptchaForm
     public function initialize()
     {        
         $email = new Email('email', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Email'
         ]);
         
         $password = new Password('password', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Password'
         ]);
 
         $repeat_password = new Password('repeat_password', [
-            'required' => true,
-            'class' => 'form-control',
+            'required'    => true,
+            'class'       => 'form-control',
             'placeholder' => 'Repeat-Password'
         ]);
 
@@ -50,7 +50,7 @@ class RegisterForm extends CaptchaForm
         
         $repeat_password->addValidator(
             new Identical([
-            'value' => $password->getValue(),
+            'value'   => $password->getValue(),
             'message' => 'Passwords not equal'
             ])
         );
