@@ -257,6 +257,18 @@ class User extends Model
     }
 
     /**
+     * Get user info
+     * 
+     * @return object
+     */
+    public function getUserInfo(): array {
+        return [
+            'email'    => $this->email,
+            'userType' => $this->profile->name,
+        ];
+    }
+
+    /**
      * Get Current User
      *
      * @return User
