@@ -268,10 +268,16 @@ class User extends Model
      * @return object
      */
     public function getUserInfo(): array {
+        if (!$this->id) {
+            return [];
+        }
+
+        $media = $this->media;
+
         return [
             'email'    => $this->email,
             'userType' => $this->profile->name,
-            'image'    => $this->media->mediaName,
+            'image'    => $media ? $this->media->mediaName : '',
         ];
     }
 

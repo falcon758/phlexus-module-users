@@ -82,7 +82,7 @@ class AuthController extends Controller
         if (
             !$this->sendActivateEmail(
                 $newUser,
-                $this->security->getUserTokenByHour($user->userHash),
+                $this->security->getUserTokenByHour($newUser->userHash),
                 $newUser->hashCode
             )
         ) {
@@ -114,7 +114,7 @@ class AuthController extends Controller
         $token = $this->request->get('token', null, '');
 
         // Assure that hash code exists
-        if (!$user || !$security->checkHash($token, $security->getUserTokenByHour($user->userHash))) {
+        if (!$user || !$security->checkUserTokenByHour($user->userHash, $token)) {
             $this->flash->error('Unable to process account activation!');
 
             return $this->response->redirect('user/auth/create');
@@ -278,7 +278,7 @@ class AuthController extends Controller
         $token = $this->request->get('token', null, '');
 
         // Assure that only one hash is found and token is correct
-        if (count($user) !== 1 || !$security->checkHash($token, $security->getUserTokenByHour($user->userHash))) {
+        if (count($user) !== 1 || !$security->checkUserTokenByHour($user[0]->userHash, $token)) {
             $this->flash->error('Unable to procceed with recover process!');
 
             return $this->response->redirect('user/auth/remind');
