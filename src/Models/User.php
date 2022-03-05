@@ -49,21 +49,26 @@ class User extends Model
      * @var string
      */
     public $hash_code;
-    
-    /**
-     * @var string
-     */
-    public $profile_image;
 
     /**
      * @var int
      */
-    public $active;
+    public $profileID;
+
+    /**
+     * @var int
+     */
+    public $imageID;
 
     /**
      * @var int
      */
     public $attempts;
+
+    /**
+     * @var int
+     */
+    public $active;
 
     /**
      * @var string
@@ -84,11 +89,6 @@ class User extends Model
      * @var string
      */
     public $modifiedAt;
-
-    /**
-     * @var int
-     */
-    public $profileID;
 
     /**
      * Initialize
