@@ -115,7 +115,7 @@ class AuthController extends Controller
 
         // Assure that hash code exists
         if (!$user || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
-            $this->flash->error('Unable to proccess account activation!');
+            $this->flash->error('Unable to process account activation!');
 
             return $this->response->redirect('user/auth/create');
         }
@@ -246,7 +246,7 @@ class AuthController extends Controller
         $user = User::findFirstByEmail($email);
 
         if (!$user || $user->hash_code !== null) {
-            $this->flash->error('Unable to proccess reminder!');
+            $this->flash->error('Unable to process reminder!');
 
             return $this->response->redirect('user/auth');
         }
@@ -279,7 +279,7 @@ class AuthController extends Controller
 
         // Assure that only one hash is found and token is correct
         if (count($user) !== 1 || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
-            $this->flash->error('Unable to procceed with recover proccess!');
+            $this->flash->error('Unable to procceed with recover process!');
 
             return $this->response->redirect('user/auth/remind');
         }
@@ -325,7 +325,7 @@ class AuthController extends Controller
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
-            $this->flash->error('Unable to procceed with recover proccess!');
+            $this->flash->error('Unable to procceed with recover process!');
 
             return $this->response->redirect('user/auth/remind');
         }
@@ -333,7 +333,7 @@ class AuthController extends Controller
         $user = $user[0];
 
         if (!$user->changePassword($post['password'])) {
-            $this->flash->error('Unable to procceed with recover proccess!');
+            $this->flash->error('Unable to procceed with recover process!');
 
             return $this->response->redirect('user/auth/remind');
         }
