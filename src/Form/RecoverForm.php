@@ -27,7 +27,7 @@ class RecoverForm extends CaptchaForm
      */
     public function initialize()
     {
-        $hash_code = new Hidden('hash_code', [
+        $hashCode = new Hidden('hash_code', [
             'required' => true,
             'class'    => 'form-control'
         ]);
@@ -38,13 +38,13 @@ class RecoverForm extends CaptchaForm
             'placeholder' => 'Password'
         ]);
 
-        $repeat_password = new Password('repeat_password', [
+        $repeatPassword = new Password('repeat_password', [
             'required'    => true,
             'class'       => 'form-control',
             'placeholder' => 'Repeat-Password'
         ]);
         
-        $hash_code->addValidator(new Alnum(
+        $hashCode->addValidator(new Alnum(
             [
                 'message' => ':field must contain only alphanumeric characters.'
             ]
@@ -52,15 +52,15 @@ class RecoverForm extends CaptchaForm
 
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
-        $repeat_password->addValidator(
+        $repeatPassword->addValidator(
             new Identical([
                 'value'   => $password->getValue(),
                 'message' => 'Passwords not equal'
             ])
         );
 
-        $this->add($hash_code);
+        $this->add($hashCode);
         $this->add($password);
-        $this->add($repeat_password);
+        $this->add($repeatPassword);
     }
 }

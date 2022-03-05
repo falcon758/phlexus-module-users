@@ -71,9 +71,9 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $new_user = (new User())->createUser($post['email'], $post['password']);
+        $newUser = (new User())->createUser($post['email'], $post['password']);
 
-        if (!$new_user) {
+        if (!$newUser) {
             $this->flash->error('Unable to create account!');
 
             return $this->response->redirect('user/auth/create');
@@ -81,12 +81,12 @@ class AuthController extends Controller
 
         if (
             !$this->sendActivateEmail(
-                $new_user,
-                $this->security->getUserTokenByHour($user->user_hash),
-                $new_user->hash_code
+                $newUser,
+                $this->security->getUserTokenByHour($user->userHash),
+                $newUser->hashCode
             )
         ) {
-            $new_user->delete();
+            $newUser->delete();
 
             return $this->response->redirect('user/auth/create');
         }
@@ -106,15 +106,15 @@ class AuthController extends Controller
      * 
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
-    public function activateAction(string $hash_code) {        
-        $user = User::getActivateUser($hash_code);
+    public function activateAction(string $hashCode) {        
+        $user = User::getActivateUser($hashCode);
 
         $security = $this->security;
 
         $token = $this->request->get('token', null, '');
 
         // Assure that hash code exists
-        if (!$user || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
+        if (!$user || !$security->checkHash($token, $security->getUserTokenByHour($user->userHash))) {
             $this->flash->error('Unable to process account activation!');
 
             return $this->response->redirect('user/auth/create');
@@ -245,7 +245,7 @@ class AuthController extends Controller
 
         $user = User::findFirstByEmail($email);
 
-        if (!$user || $user->hash_code !== null) {
+        if (!$user || $user->hashCode !== null) {
             $this->flash->error('Unable to process reminder!');
 
             return $this->response->redirect('user/auth');
@@ -253,7 +253,7 @@ class AuthController extends Controller
 
         $user->generateHashCode();
 
-        if (!$this->sendRemindEmail($user, $this->security->getUserTokenByHour($user->user_hash), $user->hash_code)) {
+        if (!$this->sendRemindEmail($user, $this->security->getUserTokenByHour($user->userHash), $user->hashCode)) {
             return $this->response->redirect('user/auth/remind');
         }
 
@@ -270,25 +270,25 @@ class AuthController extends Controller
      * @return ResponseInterface|void
      * 
      */
-    public function recoverAction(string $hash_code) {
-        $user = User::findByHash_code($hash_code);
+    public function recoverAction(string $hashCode) {
+        $user = User::findByHashCode($hashCode);
 
         $security = $this->security;
 
         $token = $this->request->get('token', null, '');
 
         // Assure that only one hash is found and token is correct
-        if (count($user) !== 1 || !$security->checkHash($token, $security->getUserTokenByHour($user->user_hash))) {
+        if (count($user) !== 1 || !$security->checkHash($token, $security->getUserTokenByHour($user->userHash))) {
             $this->flash->error('Unable to procceed with recover process!');
 
             return $this->response->redirect('user/auth/remind');
         }
 
-        $recover_form = new RecoverForm();
+        $recoverForm = new RecoverForm();
 
-        $recover_form->get('hash_code')->setDefault($hash_code);
+        $recoverForm->get('hash_code')->setDefault($hashCode);
 
-        $this->view->setVar('form', $recover_form);
+        $this->view->setVar('form', $recoverForm);
     }
 
     /**
@@ -311,7 +311,7 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
-        $hash_code = $post['hash_code'];
+        $hashCode = $post['hash_code'];
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
@@ -321,7 +321,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/remind');
         }
 
-        $user = User::findByHash_code($hash_code);
+        $user = User::findByHashCode($hashCode);
 
         // Assure that only one hash is found
         if (count($user) !== 1) {

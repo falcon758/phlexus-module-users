@@ -38,7 +38,7 @@ class RegisterForm extends CaptchaForm
             'placeholder' => 'Password'
         ]);
 
-        $repeat_password = new Password('repeat_password', [
+        $repeatPassword = new Password('repeat_password', [
             'required'    => true,
             'class'       => 'form-control',
             'placeholder' => 'Repeat-Password'
@@ -48,7 +48,7 @@ class RegisterForm extends CaptchaForm
         
         $password->addValidator(new PresenceOf(['message' => 'Password is required']));
         
-        $repeat_password->addValidator(
+        $repeatPassword->addValidator(
             new Identical([
             'value'   => $password->getValue(),
             'message' => 'Passwords not equal'
@@ -57,6 +57,6 @@ class RegisterForm extends CaptchaForm
 
         $this->add($email);
         $this->add($password);
-        $this->add($repeat_password);
+        $this->add($repeatPassword);
     }
 }

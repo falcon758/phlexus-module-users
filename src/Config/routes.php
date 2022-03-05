@@ -25,7 +25,7 @@ $routes->addPost('/user/auth/doCreate', [
     'action' => 'doCreate',
 ]);
 
-$routes->addGet('/user/auth/activate/{hash_code:[0-9a-zA-Z]+}', [
+$routes->addGet('/user/auth/activate/{hashCode:[0-9a-zA-Z]+}', [
     'controller' => 'auth',
     'action' => 'activate',
 ]);
@@ -50,7 +50,7 @@ $routes->addPost('/user/auth/doRemind', [
     'action' => 'doRemind',
 ]);
 
-$routes->addGet('/user/auth/recover/{hash_code:[0-9a-zA-Z]+}', [
+$routes->addGet('/user/auth/recover/{hashCode:[0-9a-zA-Z]+}', [
     'controller' => 'auth',
     'action' => 'recover',
 ]);
@@ -65,7 +65,13 @@ $routes->addGet('/user/auth/logout', [
     'action' => 'logout',
 ]);
 
+
 $routes->addGet('/user/users', [
+    'controller' => 'user',
+    'action' => 'view',
+]);
+
+$routes->addGet('/baseuser/user', [
     'controller' => 'user',
     'action' => 'view',
 ]);
@@ -77,17 +83,17 @@ foreach (['create', 'view'] as $action) {
     ]);
 }
 
-$routes->addGet('/user/edit/{id:[0-9]+}', [
+$routes->addGet('/baseuser/user/edit/{id:[0-9]+}', [
     'controller' => 'user',
     'action' => 'edit',
 ]);
 
-$routes->addPost('/user/save', [
+$routes->addPost('/baseuser/user/save', [
     'controller' => 'user',
     'action' => 'save',
 ]);
 
-$routes->addPost('/user/delete/{id:[0-9]+}', [
+$routes->addPost('/baseuser/user/delete/{id:[0-9]+}', [
     'controller' => 'user',
     'action' => 'delete',
 ]);

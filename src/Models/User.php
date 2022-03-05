@@ -44,12 +44,12 @@ class User extends Model
     /**
      * @var string
      */
-    public $user_hash;
+    public $userHash;
     
     /**
      * @var string
      */
-    public $hash_code;
+    public $hashCode;
 
     /**
      * @var int
@@ -149,8 +149,8 @@ class User extends Model
         $this->password  = $password;
         $this->active    = User::DISABLED;
         $this->profileID = Profile::MEMBERID;
-        $this->user_hash = $this->generateHash();
-        $this->hash_code = $this->generateHash();
+        $this->userHash = $this->generateHash();
+        $this->hashCode = $this->generateHash();
 
         if (!$this->save()) {
             return null;
@@ -198,7 +198,7 @@ class User extends Model
      */
     public function activateUser(): bool {
         $this->active    = User::ENABLED;
-        $this->hash_code = null;
+        $this->hashCode = null;
 
         return $this->save();
     }
@@ -212,7 +212,7 @@ class User extends Model
      */
     public function changePassword(string $password): bool {
         $this->password  = $password;
-        $this->hash_code = null;
+        $this->hashCode = null;
 
         return $this->save();
     }
@@ -225,7 +225,7 @@ class User extends Model
      * @return bool
      */
     public function setHashCode(string $hashCode): bool {
-        $this->hash_code = $hashCode;
+        $this->hashCode = $hashCode;
 
         return $this->save();
     }
@@ -239,7 +239,7 @@ class User extends Model
      * @return void
      */
     public function generateUserHash(): void {
-        $this->user_hash = $this->generateHash();
+        $this->userHash = $this->generateHash();
     }
 
     /**
@@ -248,7 +248,7 @@ class User extends Model
      * @return bool
      */
     public function generateHashCode(): bool {
-        $this->hash_code = $this->generateHash();
+        $this->hashCode = $this->generateHash();
 
         return $this->save();
     }
@@ -301,10 +301,10 @@ class User extends Model
      */
     public static function getActivateUser(string $hashCode): User {
         return self::findFirst([
-            'conditions' => "active = :active: AND hash_code = :hash_code:",
+            'conditions' => "active = :active: AND hashCode = :hashCode:",
             'bind'       => [
                 'active'  => self::DISABLED,
-                'hash_code'  => $hashCode
+                'hashCode'  => $hashCode
             ],
         ]);
     }

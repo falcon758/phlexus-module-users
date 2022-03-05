@@ -38,16 +38,16 @@ class ProfileForm extends CaptchaForm
             'placeholder' => 'Password',
         ]);
 
-        $repeat_password = new Password('repeat_password', [
+        $repeatPassword = new Password('repeat_password', [
             'class'       => 'form-control',
             'placeholder' => 'Repeat-Password',
         ]);
 
-        $profile_image = new File('profile_image');
+        $profileImage = new File('profile_image');
                 
-        $password_value = $password->getValue();
+        $passwordValue = $password->getValue();
 
-        $repeat_password->addValidator(
+        $repeatPassword->addValidator(
             new Identical([
                 'allowEmpty' => true,
                 'value'      => $password->getValue(),
@@ -55,7 +55,7 @@ class ProfileForm extends CaptchaForm
             ])
         );
 
-        $profile_image->addValidator(
+        $profileImage->addValidator(
             new FileValidator(
                 [
                     'allowEmpty'     => true,
@@ -71,7 +71,7 @@ class ProfileForm extends CaptchaForm
 
         $this->add($email);
         $this->add($password);
-        $this->add($repeat_password);
-        $this->add($profile_image);
+        $this->add($repeatPassword);
+        $this->add($profileImage);
     }
 }
