@@ -7,9 +7,9 @@ use Phlexus\Forms\CaptchaForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
-use Phlexus\Libraries\File\Handler as FileHandler;
-use Phlexus\Libraries\File\Models\Media;
-use Phlexus\Libraries\File\Models\MediaDestiny;
+use Phlexus\Libraries\Media\Handler as FileHandler;
+use Phlexus\Libraries\Media\Models\Media;
+use Phlexus\Libraries\Media\Models\MediaDestiny;
 
 /**
  * Class Profile
