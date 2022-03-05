@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Phlexus\Modules\BaseUser\Models;
 
+use Phlexus\Libraries\File\Models\Media;
 use Phalcon\Mvc\Model;
 use Phalcon\DI;
 
@@ -101,6 +102,11 @@ class User extends Model
 
         $this->hasOne('profileID', Profile::class, 'id', [
             'alias'    => 'profile',
+            'reusable' => true,
+        ]);
+        
+        $this->hasOne('imageID', Media::class, 'id', [
+            'alias'    => 'media',
             'reusable' => true,
         ]);
     }
@@ -265,6 +271,7 @@ class User extends Model
         return [
             'email'    => $this->email,
             'userType' => $this->profile->name,
+            'image'    => $this->media->mediaName,
         ];
     }
 
