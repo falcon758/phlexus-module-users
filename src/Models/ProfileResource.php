@@ -20,7 +20,7 @@ class ProfileResource extends Model
     /**
      * @var int
      */
-    public int $id;
+    public $id;
 
     /**
      * @var int

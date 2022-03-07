@@ -19,7 +19,7 @@ class Resource extends Model
     /**
      * @var int
      */
-    public int $id;
+    public $id;
 
     /**
      * @var string
@@ -32,9 +32,9 @@ class Resource extends Model
     public string $action;
 
     /**
-     * @var int
+     * @var int|null
      */
-    public int $active;
+    public $active;
     
 
     /**

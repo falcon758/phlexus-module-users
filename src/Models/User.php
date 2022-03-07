@@ -24,14 +24,20 @@ class User extends Model
 
     public const ENABLED = 1;
 
+    /**
+     * @var User
+     */
     private static User $user;
 
-    private string $storePassword;
+    /**
+     * @var string
+     */
+    private $storePassword;
 
     /**
      * @var int
      */
-    public int $id;
+    public $id;
 
     /**
      * @var string
@@ -54,6 +60,11 @@ class User extends Model
     public $hashCode;
 
     /**
+     * @var int|null
+     */
+    public $attempts;
+
+    /**
      * @var int
      */
     public int $profileID;
@@ -64,14 +75,9 @@ class User extends Model
     public $imageID;
 
     /**
-     * @var int
+     * @var int|null
      */
-    public int $attempts;
-
-    /**
-     * @var int
-     */
-    public int $active;
+    public $active;
 
     /**
      * @var string|null
@@ -84,14 +90,14 @@ class User extends Model
     public $lastFailedLoginAt;
 
     /**
-     * @var string
+     * @var string|null
      */
-    public string $createdAt;
+    public $createdAt;
 
     /**
-     * @var string
+     * @var string|null
      */
-    public string $modifiedAt;
+    public $modifiedAt;
 
     /**
      * Initialize

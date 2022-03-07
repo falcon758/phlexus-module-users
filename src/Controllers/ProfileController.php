@@ -145,6 +145,8 @@ final class ProfileController extends AbstractController
                 $handler->getFileDestiny()
             );
 
+            $handler->reset();
+
             if (!$media) {
                 return false;
             }
