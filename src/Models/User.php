@@ -157,8 +157,8 @@ class User extends Model
         $this->password  = $password;
         $this->active    = User::DISABLED;
         $this->profileID = Profile::MEMBERID;
-        $this->userHash = $this->generateHash();
-        $this->hashCode = $this->generateHash();
+        $this->userHash  = $this->generateHash();
+        $this->hashCode  = $this->generateHash();
 
         if (!$this->save()) {
             return null;

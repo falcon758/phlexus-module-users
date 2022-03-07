@@ -107,7 +107,7 @@ final class ProfileController extends AbstractController
 
             return $this->response->redirect('/profile');
         } elseif ($media instanceof Media) {
-            $user->imageID = $media->id;
+            $user->imageID = (int) $media->id;
         }
 
         if (!$user->save()) {
