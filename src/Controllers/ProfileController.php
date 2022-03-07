@@ -7,9 +7,7 @@ use Phlexus\Forms\CaptchaForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
-use Phlexus\Libraries\Media\Handler as FileHandler;
 use Phlexus\Libraries\Media\Models\Media;
-use Phlexus\Libraries\Media\Models\MediaDestiny;
 
 /**
  * Class Profile
@@ -135,10 +133,8 @@ final class ProfileController extends AbstractController
 
         $files = $this->request->getUploadedFiles(true, true);
             
-        if (isset($files['profile_image'])) {
-            $handler = new FileHandler($files['profile_image']);
-            
-            if (!$handler->setFileDestiny(MediaDestiny::DESTINY_USER)->uploadFile()) {
+        if (isset($files['profile_image'])) {            
+            if (!$this->media->setFile($files['profile_image'])->uploadFile()) {
                 return false;
             }
 

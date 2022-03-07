@@ -15,7 +15,7 @@ use Phalcon\Mvc\Dispatcher\Exception as MvcDispatcherException;
  */
 final class Acl
 {
-    private $isAllowed = false;
+    private bool $isAllowed = false;
 
     /**
      * Construct

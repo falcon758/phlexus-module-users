@@ -24,72 +24,74 @@ class User extends Model
 
     public const ENABLED = 1;
 
-    private $storePassword;
+    private static User $user;
+
+    private string $storePassword;
 
     /**
      * @var int
      */
-    public $id;
+    public int $id;
 
     /**
      * @var string
      */
-    public $email;
+    public string $email;
 
     /**
      * @var string
      */
-    public $password;
+    public string $password;
 
     /**
      * @var string
      */
-    public $userHash;
+    public string $userHash;
     
     /**
-     * @var string
+     * @var string|null
      */
     public $hashCode;
 
     /**
      * @var int
      */
-    public $profileID;
+    public int $profileID;
 
     /**
-     * @var int
+     * @var int|null
      */
     public $imageID;
 
     /**
      * @var int
      */
-    public $attempts;
+    public int $attempts;
 
     /**
      * @var int
      */
-    public $active;
+    public int $active;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $lastLoginAt;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $lastFailedLoginAt;
 
     /**
      * @var string
      */
-    public $createdAt;
+    public string $createdAt;
 
     /**
      * @var string
      */
-    public $modifiedAt;
+    public string $modifiedAt;
 
     /**
      * Initialize
@@ -295,7 +297,13 @@ class User extends Model
             return new self;
         }
 
-        return self::findFirstByid($userID);
+        if (isset(self::$user)) {
+            return self::$user;
+        }
+
+        self::$user = self::findFirstByid($userID);
+
+        return self::$user;
     }
 
     /**

@@ -19,22 +19,22 @@ class Resource extends Model
     /**
      * @var int
      */
-    public $id;
+    public int $id;
 
     /**
      * @var string
      */
-    public $resource;
+    public string $resource;
 
     /**
      * @var string
      */
-    public $action;
+    public string $action;
 
     /**
      * @var int
      */
-    public $active;
+    public int $active;
     
 
     /**
