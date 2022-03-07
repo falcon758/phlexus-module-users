@@ -92,7 +92,7 @@ class Profile extends Model
     public static function getUserProfile(): Profile {
         $user = User::getUser();
 
-        if ($user === null || !$user->profileID) {
+        if ($user === null || !isset($user->profileID)) {
             return new self;
         }
 

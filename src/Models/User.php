@@ -136,6 +136,14 @@ class User extends Model
      */
     public function beforeSave()
     {
+        if (!isset($this->userHash)) {
+            $this->userHash  = $this->generateHash();
+        }
+
+        if (!isset($this->hashCode)) {
+            $this->hashCode  = $this->generateHash();
+        }
+
         if ($this->password !== null && $this->storePassword !== $this->password) {
             $this->password = Di::getDefault()->getShared('security')->hash($this->password);
         }
@@ -157,8 +165,6 @@ class User extends Model
         $this->password  = $password;
         $this->active    = User::DISABLED;
         $this->profileID = Profile::MEMBERID;
-        $this->userHash  = $this->generateHash();
-        $this->hashCode  = $this->generateHash();
 
         if (!$this->save()) {
             return null;
@@ -223,31 +229,6 @@ class User extends Model
         $this->hashCode = null;
 
         return $this->save();
-    }
-
-    /**
-     * Set user HashCode
-     *
-     * @param string $hashCode User HashCode
-     * 
-     * @return bool
-     */
-    public function setHashCode(string $hashCode): bool {
-        $this->hashCode = $hashCode;
-
-        return $this->save();
-    }
-
-
-    /**
-     * Generate user Hash
-     *
-     * @param string $hashCode User HashCode
-     * 
-     * @return void
-     */
-    public function generateUserHash(): void {
-        $this->userHash = $this->generateHash();
     }
 
     /**
