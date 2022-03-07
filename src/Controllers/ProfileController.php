@@ -133,8 +133,9 @@ final class ProfileController extends AbstractController
 
         $files = $this->request->getUploadedFiles(true, true);
             
-        if (isset($files['profile_image'])) {            
-            if (!$this->media->setFile($files['profile_image'])->uploadFile()) {
+        if (isset($files['profile_image'])) {    
+            $handler = $this->media;        
+            if (!$handler->setFile($files['profile_image'])->uploadFile()) {
                 return false;
             }
 
