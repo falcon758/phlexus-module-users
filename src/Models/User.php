@@ -50,9 +50,9 @@ class User extends Model
     public string $password;
 
     /**
-     * @var string
+     * @var string|null
      */
-    public string $userHash;
+    public $userHash;
     
     /**
      * @var string|null
@@ -137,40 +137,16 @@ class User extends Model
     public function beforeSave()
     {
         if (!isset($this->userHash)) {
-            $this->userHash  = $this->generateHash();
+            $this->userHash = $this->generateHash();
         }
 
         if (!isset($this->hashCode)) {
-            $this->hashCode  = $this->generateHash();
+            $this->hashCode = $this->generateHash();
         }
 
         if ($this->password !== null && $this->storePassword !== $this->password) {
             $this->password = Di::getDefault()->getShared('security')->hash($this->password);
         }
-    }
-
-    /**
-     * Create User
-     * 
-     * @param string $email    User email
-     * @param string $password User password
-     *
-     * @return mixed User Model or null
-     */
-    public function createUser(string $email, string $password)
-    {
-        $security = Di::getDefault()->getShared('security');
-
-        $this->email     = $email;
-        $this->password  = $password;
-        $this->active    = User::DISABLED;
-        $this->profileID = Profile::MEMBERID;
-
-        if (!$this->save()) {
-            return null;
-        }
-
-        return $this;
     }
 
     /**
@@ -275,6 +251,29 @@ class User extends Model
             'userType' => $this->profile->name,
             'image'    => $media ? $this->media->mediaName : '',
         ];
+    }
+
+    /**
+     * Create User
+     * 
+     * @param string $email    User email
+     * @param string $password User password
+     *
+     * @return mixed User Model or null
+     */
+    public static function createUser(string $email, string $password)
+    {
+        $newUser            = new self;
+        $newUser->email     = $email;
+        $newUser->password  = $password;
+        $newUser->active    = User::DISABLED;
+        $newUser->profileID = Profile::MEMBERID;
+
+        if (!$newUser->save()) {
+            return null;
+        }
+
+        return $newUser;
     }
 
     /**

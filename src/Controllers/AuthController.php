@@ -71,7 +71,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $newUser = (new User())->createUser($post['email'], $post['password']);
+        $newUser = User::createUser($post['email'], $post['password']);
 
         if (!$newUser) {
             $this->flash->error('Unable to create account!');
