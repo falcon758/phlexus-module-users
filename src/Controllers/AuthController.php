@@ -245,7 +245,7 @@ class AuthController extends Controller
 
         $user = User::findFirstByEmail($email);
 
-        if (!$user || $user->hashCode !== null) {
+        if (!$user || !isset($user->hashCode)) {
             $this->flash->error('Unable to process reminder!');
 
             return $this->response->redirect('user/auth');
