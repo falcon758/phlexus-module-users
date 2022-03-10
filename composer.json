@@ -3,7 +3,6 @@
     "license": "BSD-3-Clause",
     "description": "Phlexus Users Module",
     "require": {
-        "falcon758/phlexus": "^1.10.0",
         "falcon758/phlexus-library-auth": "^1.4.0",
         "falcon758/phlexus-library-media": "^1.1.0"
     },
