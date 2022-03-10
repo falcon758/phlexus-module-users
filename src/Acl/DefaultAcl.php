@@ -17,6 +17,9 @@ use Phlexus\Modules\BaseUser\Models\Profile;
  */
 final class DefaultAcl extends Memory
 {
+
+    private Profile $profile;
+
     /**
      * Construct
      */
@@ -32,7 +35,30 @@ final class DefaultAcl extends Memory
             $profile = Profile::findFirstByid(Profile::GUESTID);
         }
 
+        $this->profile = $profile;
+
         $this->loadPermissions($profile);
+    }
+
+    /**
+     * Check if has permissions
+     * 
+     * @param string $module     Module
+     * @param string $controller Controller
+     * @param string $action     Action
+     * 
+     * @return bool
+     */
+    public function hasPermission(string $module, string $controller, string $action): bool {
+        $component = strtolower($module . '_' . $controller);
+
+        if ($this->isComponent($component)) {
+            if ($this->isAllowed($this->profile->name, $component, strtolower($action))) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
