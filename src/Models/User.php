@@ -239,11 +239,7 @@ class User extends Model
 
         $media = $this->media;
 
-        $userHash = $this->userHash;
-
-        $security = Di::getDefault()->getShared('security');
-
-        $userDirectory = $security->getStaticUserToken($userHash);
+        $userDirectory = Di::getDefault()->getShared('security')->getStaticUserToken();
 
         return [
             'userDir'  => $userDirectory,
