@@ -38,7 +38,7 @@ final class ProfileController extends AbstractController
         $user = User::getUser();
 
         if ($user === null) {
-            return $this->response->redirect('/home');
+            return $this->response->redirect('/');
         }
 
         $user->password = '';
@@ -63,7 +63,7 @@ final class ProfileController extends AbstractController
         $user = User::getUser();
 
         if ($user === null) {
-            return $this->response->redirect('/home');
+            return $this->response->redirect('/');
         }
 
         $post = $this->request->getPost();
