@@ -26,35 +26,43 @@ class ProfileForm extends CaptchaForm
      * Initialize form
      */
     public function initialize()
-    {        
+    {
+        $translationForm = $this->translation->setTypeForm();   
+
         $email = new Email('email', [
             'class'       => 'form-control',
-            'placeholder' => 'Email',
+            'placeholder' => $translationForm->_('field-email'),
             'readonly'    => true
         ]);
         
         $password = new Password('password', [
             'class'       => 'form-control',
-            'placeholder' => 'Password',
+            'placeholder' => $translationForm->_('field-password'),
         ]);
 
         $repeatPassword = new Password('repeat_password', [
             'class'       => 'form-control',
-            'placeholder' => 'Repeat-Password',
+            'placeholder' => $translationForm->_('field-repepat-password'),
         ]);
 
-        $profileImage = new File('profile_image');
+        $profileImage = new File('profile_image', [
+            'class'       => 'form-control',
+            'placeholder' => $translationForm->_('field-profile-image'),
+        ]);
                 
         $passwordValue = $password->getValue();
+
+        $translationMessage = $this->translation->setTypeMessage();
 
         $repeatPassword->addValidator(
             new Identical([
                 'allowEmpty' => true,
                 'value'      => $password->getValue(),
-                'message'    => 'Passwords not equal'
+                'message'    => $translationMessage->_('passwords-not-equal')
             ])
         );
 
+        
         $profileImage->addValidator(
             new FileValidator(
                 [
@@ -64,7 +72,7 @@ class ProfileForm extends CaptchaForm
                         'image/jpeg',
                         'image/png',
                     ],
-                    'message'         => 'Allowed file types are :types'
+                    'message'         => $translationMessage->_('allowed-files-are') . ':types'
                 ]
             )
         );        

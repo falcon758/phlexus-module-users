@@ -24,22 +24,26 @@ class LoginForm extends CaptchaForm
      * Initialize form
      */
     public function initialize()
-    {        
+    {   
+        $translationForm = $this->translation->setTypeForm();   
+
         $email = new Email('email', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => 'Email'
+            'placeholder' => $translationForm->_('field-email')
         ]);
         
         $password = new Password('password', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => 'Password'
+            'placeholder' => $translationForm->_('field-password')
         ]);
+
+        $translationMessage = $this->translation->setTypeMessage();   
+
+        $email->addValidator(new PresenceOf(['message' => $translationMessage->_('field-email-required')]));
         
-        $email->addValidator(new PresenceOf(['message' => 'Email is required']));
-        
-        $password->addValidator(new PresenceOf(['message' => 'Password is required']));
+        $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
         
         $this->add($email);
         $this->add($password);

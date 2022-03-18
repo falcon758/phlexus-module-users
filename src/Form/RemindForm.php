@@ -24,14 +24,20 @@ class RemindForm extends CaptchaForm
      * Initialize form
      */
     public function initialize()
-    {        
+    {   
+        $emailField = $this->translation->setTypeForm()
+                                          ->_('fiel-email');     
+
         $email = new Email('email', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => 'Email'
+            'placeholder' => $emailField
         ]);
+
+        $emailMessage = $this->translation->setTypeMessage()
+                                          ->_('fiel-email-required');
         
-        $email->addValidator(new PresenceOf(['message' => 'Email is required']));
+        $email->addValidator(new PresenceOf(['message' => $emailMessage]));
         
         $this->add($email);
     }

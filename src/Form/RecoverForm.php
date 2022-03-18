@@ -27,6 +27,8 @@ class RecoverForm extends CaptchaForm
      */
     public function initialize()
     {
+        $translationForm = $this->translation->setTypeForm();   
+
         $hashCode = new Hidden('hash_code', [
             'required' => true,
             'class'    => 'form-control'
@@ -35,27 +37,29 @@ class RecoverForm extends CaptchaForm
         $password = new Password('password', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => 'Password'
+            'placeholder' => $translationForm->_('field-password')
         ]);
 
         $repeatPassword = new Password('repeat_password', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => 'Repeat-Password'
+            'placeholder' => $translationForm->_('field-repeat-password')
         ]);
+
+        $translationMessage = $this->translation->setTypeMessage();
         
         $hashCode->addValidator(new Alnum(
             [
-                'message' => ':field must contain only alphanumeric characters.'
+                'message' => $translationMessage->_('hash-code-must-have-only-alphanumeric-characters')
             ]
         ));
 
-        $password->addValidator(new PresenceOf(['message' => 'Password is required']));
+        $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
         
         $repeatPassword->addValidator(
             new Identical([
                 'value'   => $password->getValue(),
-                'message' => 'Passwords not equal'
+                'message' => $translationMessage->_('passwords-not-equal')
             ])
         );
 

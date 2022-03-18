@@ -8,6 +8,7 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
+use Phlexus\Libraries\Translations\Database\Models\TextType;
 
 /**
  * Class Profile
@@ -88,9 +89,11 @@ final class ProfileController extends AbstractController
 
         $profileForm->bind(array_intersect_key($post, $authorizedKeys), $user);
 
+        $translationMessage = $this->translation->setType(TextType::MESSAGE);
+        
         if (!$profileForm->isValid()) {
             foreach ($profileForm->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
+                $this->flash->error($translationMessage->_($message->getMessage()));
             }
 
             return $this->response->redirect('/profile');
@@ -103,7 +106,7 @@ final class ProfileController extends AbstractController
 
         $media = $this->processUploadImage();
         if ($media === false) {
-            $this->flash->error('Unable to save image!');
+            $this->flash->error($translationMessage->_('unable-to-save-image'));
 
             return $this->response->redirect('/profile');
         } elseif ($media instanceof Media) {
@@ -111,12 +114,12 @@ final class ProfileController extends AbstractController
         }
 
         if (!$user->save()) {
-            $this->flash->error('Unable to save record!');
+            $this->flash->error($translationMessage->_('record-not-saved'));
 
             return $this->response->redirect('/profile');
         }
 
-        $this->flash->success('Record saved sucessfully!');
+        $this->flash->success($translationMessage->_('record-saved-sucessfully'));
 
         return $this->response->redirect('/profile');
     }

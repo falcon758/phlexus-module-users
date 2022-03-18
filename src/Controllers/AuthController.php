@@ -44,8 +44,10 @@ class AuthController extends Controller
     {
         $this->view->disable();
 
+        $translationMessage = $this->translation->setTypeMessage();
+
         if (!$this->request->isPost()) {
-            $this->flash->error('Invalid data sent!');
+            $this->flash->error($translationMessage->_('invalid-data-sent'));
 
             return $this->response->redirect('user/auth/create');
         }
@@ -56,7 +58,7 @@ class AuthController extends Controller
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
+                $this->flash->error($translationMessage->_($message->getMessage()));
             }
 
             return $this->response->redirect('user/auth/create');
@@ -66,7 +68,7 @@ class AuthController extends Controller
 
         // Email already registered
         if ($user) {
-            $this->flash->error('Email already exists!');
+            $this->flash->error($translationMessage->_('email-already-exists'));
 
             return $this->response->redirect('user/auth/create');
         }
@@ -74,7 +76,7 @@ class AuthController extends Controller
         $newUser = User::createUser($post['email'], $post['password']);
 
         if (!$newUser) {
-            $this->flash->error('Unable to create account!');
+            $this->flash->error($translationMessage->_('record-not-created'));
 
             return $this->response->redirect('user/auth/create');
         }
@@ -91,7 +93,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $this->flash->success('Account created successfully!');
+        $this->flash->success($translationMessage->_('account-created-successfully'));
 
         return $this->response->redirect('user/auth');
     }
@@ -113,20 +115,22 @@ class AuthController extends Controller
 
         $token = $this->request->get('token', null, '');
 
+        $translationMessage = $this->translation->setTypeMessage();
+
         // Assure that hash code exists
         if (!$user || !$security->checkUserTokenByHour($token, $user->userHash)) {
-            $this->flash->error('Unable to process account activation!');
+            $this->flash->error($translationMessage->_('unable-to-activate-account'));
 
             return $this->response->redirect('user/auth/create');
         }
 
         if (!$user->activateUser()) {
-            $this->flash->error('Unable to activate account!');
+            $this->flash->error($translationMessage->_('unable-to-activate-account'));
 
             return $this->response->redirect('user/auth/create');
         }
 
-        $this->flash->success('Account activated successfully!');
+        $this->flash->success($translationMessage->_('account-activate-successfully'));
 
         return $this->response->redirect('user/auth');
     }
@@ -158,9 +162,11 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
+        $translationMessage = $this->translation->setTypeMessage();
+
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
+                $this->flash->error($translationMessage->_($message->getMessage()));
             }
 
             return $this->response->redirect('user/auth');
@@ -181,7 +187,8 @@ class AuthController extends Controller
                 $user->failedLogin();
             }
 
-            $this->flash->error('Login failed!');
+            $this->flash->error($translationMessage->_('login-failed'));
+
             return $this->response->redirect('user/auth');
         }
 
@@ -233,9 +240,11 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
+        $translationMessage = $this->translation->setTypeMessage();
+
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
+                $this->flash->error($translationMessage->_($message->getMessage()));
             }
 
             return $this->response->redirect('user/auth/remind');
@@ -246,7 +255,7 @@ class AuthController extends Controller
         $user = User::findFirstByEmail($email);
 
         if (!$user || !isset($user->hashCode)) {
-            $this->flash->error('Unable to process reminder!');
+            $this->flash->error($translationMessage->_('reminder-not-processed'));
 
             return $this->response->redirect('user/auth');
         }
@@ -257,7 +266,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/remind');
         }
 
-        $this->flash->success('Please confirm email to recover your password!');
+        $this->flash->success($translationMessage->_('confirm-email-to-recover'));
 
         return $this->response->redirect('user/auth');
     }
@@ -279,7 +288,10 @@ class AuthController extends Controller
 
         // Assure that only one hash is found and token is correct
         if (count($user) !== 1 || !$security->checkUserTokenByHour($token, $user[0]->userHash)) {
-            $this->flash->error('Unable to procceed with recover process!');
+            $errorMessage = $this->translation->setTypeMessage()
+                                              ->error('unable-to-process-recover');
+
+            $this->flash->error($errorMessage);
 
             return $this->response->redirect('user/auth/remind');
         }
@@ -301,8 +313,10 @@ class AuthController extends Controller
     {
         $this->view->disable();
 
+        $translationMessage = $this->translation->setTypeMessage();
+
         if (!$this->request->isPost()) {
-            $this->flash->error('Invalid data sent!');
+            $this->flash->error($translationMessage->_('invalid-data-sent'));
 
             return $this->response->redirect('user/auth/remind');
         }
@@ -315,7 +329,7 @@ class AuthController extends Controller
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
+                $this->flash->error($translationMessage->_($message->getMessage()));
             }
 
             return $this->response->redirect('user/auth/remind');
@@ -325,7 +339,7 @@ class AuthController extends Controller
 
         // Assure that only one hash is found
         if (count($user) !== 1) {
-            $this->flash->error('Unable to procceed with recover process!');
+            $this->flash->error($translationMessage->_('unable-to-process-recover'));
 
             return $this->response->redirect('user/auth/remind');
         }
@@ -333,12 +347,12 @@ class AuthController extends Controller
         $user = $user[0];
 
         if (!$user->changePassword($post['password'])) {
-            $this->flash->error('Unable to procceed with recover process!');
+            $this->flash->error($translationMessage->_('unable-to-process-recover'));
 
             return $this->response->redirect('user/auth/remind');
         }
 
-        $this->flash->success('Account recovered successfully!');
+        $this->flash->success($translationMessage->_('account-recovered-successfully'));
 
         return $this->response->redirect('user/auth');
     }
@@ -360,7 +374,10 @@ class AuthController extends Controller
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
         } catch(\Exception $e) {
-            $this->flash->error('Activation failed!');
+            $errorMessage = $this->translation->setTypeMessage()
+                                             ->_('activation-failed');
+
+            $this->flash->error($errorMessage);
 
             return false;
         }
@@ -385,7 +402,12 @@ class AuthController extends Controller
         try {
             $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
         } catch(\Exception $e) {
-            $this->flash->error('Reminder failed!');
+
+            $errorMessage = $this->translation->setTypeMessage()
+                                              ->_('reminder-process-failed');
+
+            $this->flash->error($errorMessage);
+
             return false;
         }
 
