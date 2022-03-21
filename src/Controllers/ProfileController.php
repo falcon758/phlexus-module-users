@@ -93,7 +93,7 @@ final class ProfileController extends AbstractController
         
         if (!$profileForm->isValid()) {
             foreach ($profileForm->getMessages() as $message) {
-                $this->flash->error($translationMessage->_($message->getMessage()));
+                $this->flash->error($message->getMessage());
             }
 
             return $this->response->redirect('/profile');

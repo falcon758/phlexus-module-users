@@ -58,7 +58,7 @@ class AuthController extends Controller
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($translationMessage->_($message->getMessage()));
+                $this->flash->error($message->getMessage());
             }
 
             return $this->response->redirect('user/auth/create');
@@ -162,11 +162,9 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
-        $translationMessage = $this->translation->setTypeMessage();
-
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($translationMessage->_($message->getMessage()));
+                $this->flash->error($message->getMessage());
             }
 
             return $this->response->redirect('user/auth');
@@ -187,7 +185,8 @@ class AuthController extends Controller
                 $user->failedLogin();
             }
 
-            $this->flash->error($translationMessage->_('login-failed'));
+            $loginFailed = $this->translation->setTypeMessage()->_('login-failed');
+            $this->flash->error($loginFailed);
 
             return $this->response->redirect('user/auth');
         }
@@ -244,7 +243,7 @@ class AuthController extends Controller
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($translationMessage->_($message->getMessage()));
+                $this->flash->error($message->getMessage());
             }
 
             return $this->response->redirect('user/auth/remind');
@@ -329,7 +328,7 @@ class AuthController extends Controller
 
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
-                $this->flash->error($translationMessage->_($message->getMessage()));
+                $this->flash->error($message->getMessage());
             }
 
             return $this->response->redirect('user/auth/remind');
