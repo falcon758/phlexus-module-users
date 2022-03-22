@@ -129,7 +129,8 @@ final class ProfileController extends AbstractController
      *
      * @return mixed null if no file, Media if success or false if fails
      */
-    private function processUploadImage() {
+    private function processUploadImage()
+    {
         if ($this->request->hasFiles() !== true) {
             return null;
         }

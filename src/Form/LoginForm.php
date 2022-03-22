@@ -30,7 +30,7 @@ class LoginForm extends CaptchaForm
         $email = new Email('email', [
             'required'    => true,
             'class'       => 'form-control',
-            'placeholder' => $translationForm->_('field-email')
+            'placeholder' => $translationForm->_('field-email-address')
         ]);
         
         $password = new Password('password', [

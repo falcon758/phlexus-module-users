@@ -186,7 +186,8 @@ class User extends Model
      * 
      * @return bool
      */
-    public function activateUser(): bool {
+    public function activateUser(): bool
+    {
         $this->active    = User::ENABLED;
         $this->hashCode = null;
 
@@ -200,7 +201,8 @@ class User extends Model
      * 
      * @return bool
      */
-    public function changePassword(string $password): bool {
+    public function changePassword(string $password): bool
+    {
         $this->password  = $password;
         $this->hashCode = null;
 
@@ -212,7 +214,8 @@ class User extends Model
      * 
      * @return bool
      */
-    public function generateHashCode(): bool {
+    public function generateHashCode(): bool
+    {
         $this->hashCode = $this->generateHash();
 
         return $this->save();
@@ -223,7 +226,8 @@ class User extends Model
      * 
      * @return bool
      */
-    public function generateHash(): string {
+    public function generateHash(): string
+    {
         return Di::getDefault()->getShared('security')->getRandom()->base64Safe(self::HASHLENGTH);
     }
 
@@ -232,7 +236,8 @@ class User extends Model
      * 
      * @return object
      */
-    public function getUserInfo(): array {
+    public function getUserInfo(): array
+    {
         if (!$this->id) {
             return [];
         }
@@ -277,7 +282,8 @@ class User extends Model
      *
      * @return User
      */
-    public static function getUser(): User {
+    public static function getUser(): User
+    {
         $auth = DI::getDefault()->getShared('auth');
 
         $userID = (int) $auth->getIDentity();
@@ -302,7 +308,8 @@ class User extends Model
      * 
      * @return User
      */
-    public static function getActivateUser(string $hashCode): User {
+    public static function getActivateUser(string $hashCode): User
+    {
         return self::findFirst([
             'conditions' => "active = :active: AND hashCode = :hashCode:",
             'bind'       => [
@@ -319,7 +326,8 @@ class User extends Model
      * 
      * @return bool
      */
-    public static function canLogin(string $email): bool {
+    public static function canLogin(string $email): bool
+    {
         $user = self::findFirstByEmail($email);
 
         if (!$user || $user->active === 0 || $user->attempts >= self::MAX_ATTEMPTS) {
