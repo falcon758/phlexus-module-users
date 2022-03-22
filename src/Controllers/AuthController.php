@@ -130,7 +130,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $this->flash->success($translationMessage->_('account-activate-successfully'));
+        $this->flash->success($translationMessage->_('account-activated-successfully'));
 
         return $this->response->redirect('user/auth');
     }

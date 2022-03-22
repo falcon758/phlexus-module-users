@@ -80,7 +80,8 @@ final class UserController extends AbstractController
      *
      * @return bool
      */
-    private function isSave() {
+    private function isSave()
+    {
         return $this->dispatcher->getActionName() === 'save';
     }
 }

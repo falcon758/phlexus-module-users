@@ -27,11 +27,11 @@ class ProfileForm extends CaptchaForm
      */
     public function initialize()
     {
-        $translationForm = $this->translation->setTypeForm();   
+        $translationForm = $this->translation->setPage()->setTypeForm();   
 
         $email = new Email('email', [
             'class'       => 'form-control',
-            'placeholder' => $translationForm->_('field-email'),
+            'placeholder' => $translationForm->_('field-email-address'),
             'readonly'    => true
         ]);
         

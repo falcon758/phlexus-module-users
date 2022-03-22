@@ -27,7 +27,7 @@ class RecoverForm extends CaptchaForm
      */
     public function initialize()
     {
-        $translationForm = $this->translation->setTypeForm();   
+        $translationForm = $this->translation->setPage()->setTypeForm();   
 
         $hashCode = new Hidden('hash_code', [
             'required' => true,

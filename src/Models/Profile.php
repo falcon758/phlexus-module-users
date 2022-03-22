@@ -75,7 +75,8 @@ class Profile extends Model
      *
      * @return Simple
      */
-    public static function getProfiles(): Simple {
+    public static function getProfiles(): Simple
+    {
         return self::find([
             'active = :active:',
             'bind' => [
@@ -89,7 +90,8 @@ class Profile extends Model
      *
      * @return Profile
      */
-    public static function getUserProfile(): Profile {
+    public static function getUserProfile(): Profile
+    {
         $user = User::getUser();
 
         if ($user === null || !isset($user->profileID)) {
@@ -104,7 +106,8 @@ class Profile extends Model
      *
      * @return bool
      */
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return ((int) $this->id) === self::ADMINID;
     }
 }

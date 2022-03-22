@@ -8,7 +8,6 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
-use Phlexus\Libraries\Translations\Database\Models\TextType;
 
 /**
  * Class Profile
@@ -89,7 +88,7 @@ final class ProfileController extends AbstractController
 
         $profileForm->bind(array_intersect_key($post, $authorizedKeys), $user);
 
-        $translationMessage = $this->translation->setType(TextType::MESSAGE);
+        $translationMessage = $this->translation->setPage()->setTypeMessage();
         
         if (!$profileForm->isValid()) {
             foreach ($profileForm->getMessages() as $message) {
@@ -129,7 +128,8 @@ final class ProfileController extends AbstractController
      *
      * @return mixed null if no file, Media if success or false if fails
      */
-    private function processUploadImage() {
+    private function processUploadImage()
+    {
         if ($this->request->hasFiles() !== true) {
             return null;
         }

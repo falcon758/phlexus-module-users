@@ -68,7 +68,8 @@ final class DefaultAcl extends Memory
      * 
      * @return void
      */
-    private function loadPermissions(Profile $profile): void {
+    private function loadPermissions(Profile $profile): void
+    {
         $this->addRole(new Role($profile->name));
 
         foreach ($profile->getProfileResource() as $profileResource) {
