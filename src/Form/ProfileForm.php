@@ -57,8 +57,9 @@ class ProfileForm extends CaptchaForm
         $password->addValidator(
             new Regex(
                 [
-                    'pattern' => User::PASSWORD_REGEX,
-                    'message' => $translationMessage->_('weak-password'),
+                    'allowEmpty' => true,
+                    'pattern'    => User::PASSWORD_REGEX,
+                    'message'    => $translationMessage->_('weak-password'),
                 ]
             )
         );
