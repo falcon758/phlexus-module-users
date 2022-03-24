@@ -17,6 +17,7 @@ use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Email as EmailValidator;
 
 class LoginForm extends CaptchaForm
 {
@@ -41,7 +42,10 @@ class LoginForm extends CaptchaForm
 
         $translationMessage = $this->translation->setTypeMessage();   
 
-        $email->addValidator(new PresenceOf(['message' => $translationMessage->_('field-email-required')]));
+        $email->addValidators([
+            new PresenceOf(['message' => $translationMessage->_('field-email-required')]),
+            new EmailValidator(['message' => $translationMessage->_('field-email-is-invalid')])
+        ]);
         
         $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
         

@@ -17,6 +17,7 @@ use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Email as EmailValidator;
 
 class RemindForm extends CaptchaForm
 {
@@ -34,9 +35,12 @@ class RemindForm extends CaptchaForm
             'placeholder' => $emailField
         ]);
 
-        $emailMessage = $this->translation->setTypeMessage()
-                                          ->_('field-email-required');
-        
+        $translationMessage = $this->translation->setTypeMessage();
+        $email->addValidators([
+            new PresenceOf(['message' => $translationMessage->_('field-email-required')]),
+            new EmailValidator(['message' => $translationMessage->_('field-email-is-invalid')])
+        ]);
+                                
         $email->addValidator(new PresenceOf(['message' => $emailMessage]));
         
         $this->add($email);

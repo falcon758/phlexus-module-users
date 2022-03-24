@@ -18,6 +18,7 @@ use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\Email as EmailValidator;
 
 class RegisterForm extends CaptchaForm
 {
@@ -48,8 +49,11 @@ class RegisterForm extends CaptchaForm
 
         $translationMessage = $this->translation->setTypeMessage();
 
-        $email->addValidator(new PresenceOf(['message' => $translationMessage->_('field-email-required')]));        
-        
+        $email->addValidators([
+            new PresenceOf(['message' => $translationMessage->_('field-email-required')]),
+            new EmailValidator(['message' => $translationMessage->_('field-email-is-invalid')])
+        ]);
+
         $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
         
         $repeatPassword->addValidator(
