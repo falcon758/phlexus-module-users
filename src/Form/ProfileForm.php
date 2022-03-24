@@ -36,7 +36,12 @@ class ProfileForm extends CaptchaForm
             'placeholder' => $translationForm->_('field-email-address'),
             'readonly'    => true
         ]);
-        
+
+        $oldPassword = new Password('old_password', [
+            'class'       => 'form-control',
+            'placeholder' => $translationForm->_('field-old-password'),
+        ]);
+
         $password = new Password('password', [
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-password'),
@@ -64,8 +69,6 @@ class ProfileForm extends CaptchaForm
             )
         );
 
-        $passwordValue = $password->getValue();
-
         $repeatPassword->addValidator(
             new Identical([
                 'allowEmpty' => true,
@@ -90,6 +93,7 @@ class ProfileForm extends CaptchaForm
         );        
 
         $this->add($email);
+        $this->add($oldPassword);
         $this->add($password);
         $this->add($repeatPassword);
         $this->add($profileImage);

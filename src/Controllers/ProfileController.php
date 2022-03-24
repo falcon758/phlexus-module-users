@@ -41,6 +41,7 @@ final class ProfileController extends AbstractController
             return $this->response->redirect('/');
         }
 
+        $user->old_password = '';
         $user->password = '';
         $user->repeat_password = '';
 
@@ -73,6 +74,7 @@ final class ProfileController extends AbstractController
         }
 
         $authorized = [
+            'old_password',
             'password',
             'repeat_password',
             'profile_image',
@@ -81,9 +83,10 @@ final class ProfileController extends AbstractController
         ];
 
         $authorizedKeys = array_flip($authorized);
+        $oldPassword    = $user->password;
 
         if (isset($post['password']) && empty($post['password'])) {
-            $post['password'] = $user->password;
+            $post['password'] = $oldPassword;
         }
 
         $profileForm->bind(array_intersect_key($post, $authorizedKeys), $user);
@@ -98,10 +101,11 @@ final class ProfileController extends AbstractController
             return $this->response->redirect('/profile');
         }
 
-        // Remove csrf content, repeat_password and profile_image
-        $user->csrf = null;
+        // Remove csrf content, old_password, repeat_password and profile_image
+        $user->csrf            = null;
+        $user->old_password    = null;
         $user->repeat_password = null;
-        $user->profile_image = null;
+        $user->profile_image   = null;
 
         $media = $this->processUploadImage();
         if ($media === false) {
@@ -110,6 +114,12 @@ final class ProfileController extends AbstractController
             return $this->response->redirect('/profile');
         } elseif ($media instanceof Media) {
             $user->imageID = (int) $media->id;
+        }
+
+        if (!$this->security->checkHash($post['old_password'], $oldPassword)) {
+            $this->flash->error($translationMessage->_('old-password-not-equal'));
+
+            return $this->response->redirect('/profile');
         }
 
         if (!$user->save()) {
