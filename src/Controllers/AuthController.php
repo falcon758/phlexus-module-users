@@ -331,7 +331,7 @@ class AuthController extends Controller
                 $this->flash->error($message->getMessage());
             }
 
-            return $this->response->redirect('user/auth/remind');
+            return $this->response->redirect($this->request->getHttpReferer());
         }
 
         $user = User::findByHashCode($hashCode);
