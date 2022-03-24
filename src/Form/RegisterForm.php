@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Forms\CaptchaForm;
+use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\Email as EmailValidator;
 
 class RegisterForm extends CaptchaForm
@@ -54,7 +56,15 @@ class RegisterForm extends CaptchaForm
             new EmailValidator(['message' => $translationMessage->_('field-email-is-invalid')])
         ]);
 
-        $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
+        $password->addValidators([
+            new PresenceOf(['message' => $translationMessage->_('field-password-required')]),
+            new Regex(
+                [
+                    'pattern' => User::PASSWORD_REGEX,
+                    'message' => $translationMessage->_('weak-password'),
+                ]
+            )
+        ]);
         
         $repeatPassword->addValidator(
             new Identical([

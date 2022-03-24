@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Forms\CaptchaForm;
+use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\Alnum;
+use Phalcon\Validation\Validator\Regex;
 
 class RecoverForm extends CaptchaForm
 {
@@ -54,7 +56,15 @@ class RecoverForm extends CaptchaForm
             ]
         ));
 
-        $password->addValidator(new PresenceOf(['message' => $translationMessage->_('field-password-required')]));
+        $password->addValidators([
+            new PresenceOf(['message' => $translationMessage->_('field-password-required')]),
+            new Regex(
+                [
+                    'pattern' => User::PASSWORD_REGEX,
+                    'message' => $translationMessage->_('weak-password'),
+                ]
+            )
+        ]);
         
         $repeatPassword->addValidator(
             new Identical([

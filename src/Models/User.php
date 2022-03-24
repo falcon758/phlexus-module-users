@@ -24,6 +24,8 @@ class User extends Model
 
     public const ENABLED = 1;
 
+    public const PASSWORD_REGEX = '/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[*?@#$%]).{8,40})$/';
+
     /**
      * @var User
      */

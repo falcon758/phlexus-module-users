@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Forms\CaptchaForm;
+use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\File;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\File as FileValidator;
 
 class ProfileForm extends CaptchaForm
@@ -49,10 +51,19 @@ class ProfileForm extends CaptchaForm
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-profile-image'),
         ]);
-                
-        $passwordValue = $password->getValue();
 
         $translationMessage = $this->translation->setTypeMessage();
+
+        $password->addValidator(
+            new Regex(
+                [
+                    'pattern' => User::PASSWORD_REGEX,
+                    'message' => $translationMessage->_('weak-password'),
+                ]
+            )
+        );
+
+        $passwordValue = $password->getValue();
 
         $repeatPassword->addValidator(
             new Identical([
