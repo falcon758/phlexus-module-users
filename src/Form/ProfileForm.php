@@ -59,20 +59,25 @@ class ProfileForm extends CaptchaForm
 
         $translationMessage = $this->translation->setTypeMessage();
 
-        $password->addValidator(
-            new Regex(
-                [
-                    'allowEmpty' => true,
-                    'pattern'    => User::PASSWORD_REGEX,
-                    'message'    => $translationMessage->_('weak-password'),
-                ]
-            )
-        );
+        $passwordValue = $password->getValue();
+
+        // allowEmpty not working
+        if (!empty($passwordValue)) {
+            $password->addValidator(
+                new Regex(
+                    [
+                        'allowEmpty' => true,
+                        'pattern'    => User::PASSWORD_REGEX,
+                        'message'    => $translationMessage->_('weak-password'),
+                    ]
+                )
+            );
+        }
 
         $repeatPassword->addValidator(
             new Identical([
                 'allowEmpty' => true,
-                'value'      => $password->getValue(),
+                'value'      => $passwordValue,
                 'message'    => $translationMessage->_('passwords-not-equal')
             ])
         );
