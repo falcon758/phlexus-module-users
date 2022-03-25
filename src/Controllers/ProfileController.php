@@ -85,7 +85,9 @@ final class ProfileController extends AbstractController
         $authorizedKeys = array_flip($authorized);
         $oldPassword    = $user->password;
 
+        $passwordChange = true;
         if (isset($post['password']) && empty($post['password'])) {
+            $passwordChange   = false;
             $post['password'] = $oldPassword;
         }
 
@@ -116,7 +118,7 @@ final class ProfileController extends AbstractController
             $user->imageID = (int) $media->id;
         }
 
-        if (!$this->security->checkHash($post['old_password'], $oldPassword)) {
+        if ($passwordChange && !$this->security->checkHash($post['old_password'], $oldPassword)) {
             $this->flash->error($translationMessage->_('old-password-not-equal'));
 
             return $this->response->redirect('/profile');
