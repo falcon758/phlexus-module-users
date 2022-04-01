@@ -193,7 +193,7 @@ class AuthController extends Controller
 
         $user->successfullLogin();
 
-        return $this->response->redirect('user');
+        return $this->response->redirect($this->auth->getloginRedirect());
     }
 
     /**
