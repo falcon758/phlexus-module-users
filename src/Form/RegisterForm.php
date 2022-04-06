@@ -17,6 +17,7 @@ use Phlexus\Forms\CaptchaForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
+use Phalcon\Forms\Element\Check;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\Regex;
@@ -49,6 +50,12 @@ class RegisterForm extends CaptchaForm
             'placeholder' => $translationForm->_('field-repeat-password')
         ]);
 
+        $acceptTerms = new Check('accept_terms', [
+            'value'       => '1',
+            'required'    => true,
+            'placeholder' => $translationForm->_('field-accept-terms')
+        ]);
+
         $translationMessage = $this->translation->setTypeMessage();
 
         $email->addValidators([
@@ -68,13 +75,20 @@ class RegisterForm extends CaptchaForm
         
         $repeatPassword->addValidator(
             new Identical([
-            'value'   => $password->getValue(),
-            'message' => $translationMessage->_('passwords-not-equal')
+                'value'   => $password->getValue(),
+                'message' => $translationMessage->_('passwords-not-equal')
+            ])
+        );
+
+        $acceptTerms->addValidator(
+            new PresenceOf([
+                'message' => $translationMessage->_('terms-not-accepted')
             ])
         );
 
         $this->add($email);
         $this->add($password);
         $this->add($repeatPassword);
+        $this->add($acceptTerms);
     }
 }
