@@ -23,7 +23,9 @@ final class ProfileController extends AbstractController
      */
     public function initialize(): void
     {
-        $this->tag->setTitle('Profile');
+        $title = $this->translation->setTypePage()->_('title-user-profile');
+
+        $this->tag->setTitle($title);
     }
 
     /**

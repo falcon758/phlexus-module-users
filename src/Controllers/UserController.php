@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Controllers;
 
 use Phlexus\Modules\BaseUser\Models\User;
-use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Modules\Generic\Forms\BaseForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
@@ -32,7 +31,9 @@ final class UserController extends AbstractController
      */
     public function initialize(): void
     {
-        parent::initialize();
+        $title = $this->translation->setTypePage()->_('title-users-manager');
+
+        $this->tag->setTitle($title);
 
         $this->setModel(new User);
 

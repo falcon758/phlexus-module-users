@@ -17,8 +17,9 @@ final class ErrorsController extends AbstractController
      */
     public function show402Action(): void
     {
-        // Nothing here
-    }
+        $title = $this->translation->setTypePage()->_('title-error-402');
+
+        $this->tag->setTitle($title);    }
 
     /**
      * 404 Action
@@ -27,7 +28,9 @@ final class ErrorsController extends AbstractController
      */
     public function show404Action(): void
     {
-        // Nothing here
+        $title = $this->translation->setTypePage()->_('title-error-404');
+
+        $this->tag->setTitle($title);
     }
 
     /**
@@ -37,6 +40,8 @@ final class ErrorsController extends AbstractController
      */
     public function show500Action(): void
     {
-        // Nothing here
+        $title = $this->translation->setTypePage()->_('title-error-500');
+
+        $this->tag->setTitle($title);
     }
 }

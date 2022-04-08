@@ -15,6 +15,8 @@ final class IndexController extends AbstractController
      */
     public function indexAction(): void
     {
-        $this->tag->setTitle('Dashboard');
+        $title = $this->translation->setTypePage()->_('title-dashboard');
+
+        $this->tag->setTitle($title);
     }
 }

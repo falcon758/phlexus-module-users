@@ -21,7 +21,6 @@ class AuthController extends Controller
 {
     public function initialize(): void
     {
-        $this->tag->setTitle('Phlexus CMS');
         $this->view->setMainView('layouts/base');
     }
 
@@ -32,6 +31,10 @@ class AuthController extends Controller
      */
     public function createAction(): void
     {
+        $title = $this->translation->setTypePage()->_('title-user-register');
+
+        $this->tag->setTitle($title);
+
         $this->view->setVar('form', new RegisterForm());
     }
 
@@ -108,14 +111,20 @@ class AuthController extends Controller
      * 
      * @ToDo: Restrict number of requests by ip to prevent hash brute force
      */
-    public function activateAction(string $hashCode) {        
+    public function activateAction(string $hashCode) {
+        $translator = $this->translation;
+
+        $title = $translator->setTypePage()->_('title-user-activation');
+
+        $this->tag->setTitle($title);
+
         $user = User::getActivateUser($hashCode);
 
         $security = $this->security;
 
         $token = $this->request->get('token', null, '');
 
-        $translationMessage = $this->translation->setTypeMessage();
+        $translationMessage = $translator->setTypeMessage();
 
         // Assure that hash code exists
         if (!$user || !$security->checkUserTokenByHour($token, $user->userHash)) {
@@ -142,6 +151,10 @@ class AuthController extends Controller
      */
     public function loginAction(): void
     {
+        $title = $this->translation->setTypePage()->_('title-user-login');
+
+        $this->tag->setTitle($title);
+
         $this->view->setVar('form', new LoginForm());
     }
 
@@ -219,6 +232,10 @@ class AuthController extends Controller
      */
     public function remindAction(): void
     {
+        $title = $this->translation->setTypePage()->_('title-password-reminder');
+
+        $this->tag->setTitle($title);
+
         $this->view->setVar('form', new RemindForm());
     }
 
@@ -278,7 +295,14 @@ class AuthController extends Controller
      * @return ResponseInterface|void
      * 
      */
-    public function recoverAction(string $hashCode) {
+    public function recoverAction(string $hashCode)
+    {
+        $translator = $this->translation;
+
+        $title = $translator->setTypePage()->_('title-password-recover');
+
+        $this->tag->setTitle($title);
+
         $user = User::findByHashCode($hashCode);
 
         $security = $this->security;
@@ -287,8 +311,8 @@ class AuthController extends Controller
 
         // Assure that only one hash is found and token is correct
         if (count($user) !== 1 || !$security->checkUserTokenByHour($token, $user[0]->userHash)) {
-            $errorMessage = $this->translation->setTypeMessage()
-                                              ->error('unable-to-process-recover');
+            $errorMessage = $translator->setTypeMessage()
+                                       ->error('unable-to-process-recover');
 
             $this->flash->error($errorMessage);
 
