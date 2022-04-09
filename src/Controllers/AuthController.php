@@ -312,7 +312,7 @@ class AuthController extends Controller
         // Assure that only one hash is found and token is correct
         if (count($user) !== 1 || !$security->checkUserTokenByHour($token, $user[0]->userHash)) {
             $errorMessage = $translator->setTypeMessage()
-                                       ->error('unable-to-process-recover');
+                                       ->_('unable-to-process-recover');
 
             $this->flash->error($errorMessage);
 
