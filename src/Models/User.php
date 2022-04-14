@@ -282,16 +282,16 @@ class User extends Model
     /**
      * Get Current User
      *
-     * @return User
+     * @return User|null
      */
-    public static function getUser(): User
+    public static function getUser()
     {
         $auth = DI::getDefault()->getShared('auth');
 
         $userID = (int) $auth->getIDentity();
 
         if ($userID === 0) {
-            return new self;
+            return null;
         }
 
         if (isset(self::$user)) {

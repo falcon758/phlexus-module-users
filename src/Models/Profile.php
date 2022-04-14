@@ -88,14 +88,14 @@ class Profile extends Model
     /**
      * Get user profile
      *
-     * @return Profile
+     * @return Profile|null
      */
-    public static function getUserProfile(): Profile
+    public static function getUserProfile()
     {
         $user = User::getUser();
 
         if ($user === null || !isset($user->profileID)) {
-            return new self;
+            return null;
         }
 
         return self::findFirstByid($user->profileID);
