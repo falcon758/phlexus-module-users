@@ -35,6 +35,16 @@ class Resource extends Model
      * @var int|null
      */
     public $active;
+
+    /**
+     * @var string|null
+     */
+    public $createdAt;
+
+    /**
+     * @var string|null
+     */
+    public $modifiedAt;
     
 
     /**

@@ -33,6 +33,16 @@ class ProfileResource extends Model
     public int $profileID;
 
     /**
+     * @var string|null
+     */
+    public $createdAt;
+
+    /**
+     * @var string|null
+     */
+    public $modifiedAt;
+
+    /**
      * Initialize
      *
      * @return void
