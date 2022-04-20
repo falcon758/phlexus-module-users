@@ -4,108 +4,108 @@ declare(strict_types=1);
 use Phalcon\Mvc\Router\Group as RouterGroup;
 
 $routes = new RouterGroup([
-    'module' => \Phlexus\Modules\BaseUser\Module::getModuleName(),
-    'namespace' => \Phlexus\Modules\BaseUser\Module::getHandlersNamespace() . '\\Controllers',
+    'module'     => \Phlexus\Modules\BaseUser\Module::getModuleName(),
+    'namespace'  => \Phlexus\Modules\BaseUser\Module::getHandlersNamespace() . '\\Controllers',
     'controller' => 'index',
-    'action' => 'index',
+    'action'     => 'index',
 ]);
 
 $routes->addGet('/user', [
     'controller' => 'index',
-    'action' => 'index',
+    'action'     => 'index',
 ]);
 
 $routes->addGet('/user/auth/create', [
     'controller' => 'auth',
-    'action' => 'create',
+    'action'     => 'create',
 ]);
 
 $routes->addPost('/user/auth/doCreate', [
     'controller' => 'auth',
-    'action' => 'doCreate',
+    'action'     => 'doCreate',
 ]);
 
 $routes->addGet('/user/auth/activate/{hashCode:[0-9a-zA-Z]+}', [
     'controller' => 'auth',
-    'action' => 'activate',
+    'action'     => 'activate',
 ]);
 
 $routes->addGet('/user/auth', [
     'controller' => 'auth',
-    'action' => 'login',
+    'action'     => 'login',
 ]);
 
 $routes->addPost('/user/auth/doLogin', [
     'controller' => 'auth',
-    'action' => 'doLogin',
+    'action'     => 'doLogin',
 ]);
 
 $routes->addGet('/user/auth/remind', [
     'controller' => 'auth',
-    'action' => 'remind',
+    'action'     => 'remind',
 ]);
 
 $routes->addPost('/user/auth/doRemind', [
     'controller' => 'auth',
-    'action' => 'doRemind',
+    'action'     => 'doRemind',
 ]);
 
 $routes->addGet('/user/auth/recover/{hashCode:[0-9a-zA-Z]+}', [
     'controller' => 'auth',
-    'action' => 'recover',
+    'action'     => 'recover',
 ]);
 
 $routes->addPost('/user/auth/doRecover', [
     'controller' => 'auth',
-    'action' => 'doRecover',
+    'action'     => 'doRecover',
 ]);
 
 $routes->addGet('/user/auth/logout', [
     'controller' => 'auth',
-    'action' => 'logout',
+    'action'     => 'logout',
 ]);
 
 
 $routes->addGet('/user/users', [
     'controller' => 'user',
-    'action' => 'view',
+    'action'     => 'view',
 ]);
 
 $routes->addGet('/baseuser/user', [
     'controller' => 'user',
-    'action' => 'view',
+    'action'     => 'view',
 ]);
 
 foreach (['create', 'view'] as $action) {
     $routes->addGet('/user/' . $action, [
         'controller' => 'user',
-        'action' => $action,
+        'action'     => $action,
     ]);
 }
 
 $routes->addGet('/baseuser/user/edit/{id:[0-9]+}', [
     'controller' => 'user',
-    'action' => 'edit',
+    'action'     => 'edit',
 ]);
 
 $routes->addPost('/baseuser/user/save', [
     'controller' => 'user',
-    'action' => 'save',
+    'action'     => 'save',
 ]);
 
 $routes->addPost('/baseuser/user/delete/{id:[0-9]+}', [
     'controller' => 'user',
-    'action' => 'delete',
+    'action'     => 'delete',
 ]);
 
 $routes->addGet('/profile', [
     'controller' => 'profile',
-    'action' => 'edit',
+    'action'     => 'edit',
 ]);
 
 $routes->addPost('/profile/save', [
     'controller' => 'profile',
-    'action' => 'save',
+    'action'     => 'save',
 ]);
 
 return $routes;
