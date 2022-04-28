@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Models;
 
 use Phlexus\Libraries\Media\Models\Media;
-use Phalcon\Mvc\Model;
+use Phlexus\Models\Model;
 use Phalcon\DI;
 
 /**
