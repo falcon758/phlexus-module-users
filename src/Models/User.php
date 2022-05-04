@@ -313,7 +313,7 @@ class User extends Model
     public static function getActivateUser(string $hashCode)
     {
         return self::findFirst([
-            'conditions' => "active = :active: AND hashCode = :hashCode:",
+            'conditions' => 'active = :active: AND hashCode = :hashCode:',
             'bind'       => [
                 'active'  => self::DISABLED,
                 'hashCode'  => $hashCode
