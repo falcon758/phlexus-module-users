@@ -100,7 +100,7 @@ class Profile extends Model
      *
      * @return Profile|null
      */
-    public static function getUserProfile()
+    public static function getUserProfile(): ?Profile
     {
         $user = User::getUser();
 

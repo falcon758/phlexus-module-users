@@ -284,7 +284,7 @@ class User extends Model
      *
      * @return User|null
      */
-    public static function getUser()
+    public static function getUser(): ?User
     {
         $auth = DI::getDefault()->getShared('auth');
 
