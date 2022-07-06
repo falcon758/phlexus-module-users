@@ -69,38 +69,13 @@ final class DispatcherListener extends Injectable
         $moduleName = UserModule::getModuleName();
         $namespace = UserModule::getHandlersNamespace() . '\\Controllers';
 
-        if ($exception instanceof MvcDispatcherException) {
-            $this->response->setStatusCode(404);
-            $dispatcher->forward([
-                'module' => $moduleName,
-                'namespace' => $namespace,
-                'controller' => 'errors',
-                'action' => 'show404',
-            ]);
-
-            return false;
-        }
-
         if ($exception instanceof AuthException) {
             $this->response->setStatusCode(402);
             $dispatcher->forward([
-                'module' => $moduleName,
-                'namespace' => $namespace,
+                'module'     => $moduleName,
+                'namespace'  => $namespace,
                 'controller' => 'auth',
-                'action' => 'login',
-            ]);
-
-            $event->stop();
-        }
-
-        if ($exception instanceof ApplicationException) {
-            $this->response->setStatusCode(500);
-
-            $dispatcher->forward([
-                'module' => $moduleName,
-                'namespace' => $namespace,
-                'controller' => 'errors',
-                'action' => 'show500',
+                'action'     => 'login',
             ]);
 
             $event->stop();
