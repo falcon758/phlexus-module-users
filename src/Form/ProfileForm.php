@@ -18,9 +18,9 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\File;
-use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\File as FileValidator;
+use Phalcon\Filter\Validation\Validator\Identical;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\File as FileValidator;
 
 class ProfileForm extends CaptchaForm
 {

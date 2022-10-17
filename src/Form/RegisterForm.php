@@ -18,10 +18,10 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Check;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\Email as EmailValidator;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Identical;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\Email as EmailValidator;
 
 class RegisterForm extends CaptchaForm
 {

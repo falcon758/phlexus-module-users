@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Phlexus\Modules\BaseUser\Models;
 
 use Phlexus\Models\Model;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 /**
  * Class ProfileResource

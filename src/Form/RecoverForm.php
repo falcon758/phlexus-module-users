@@ -17,10 +17,10 @@ use Phlexus\Forms\CaptchaForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\Alnum;
-use Phalcon\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Identical;
+use Phalcon\Filter\Validation\Validator\Alnum;
+use Phalcon\Filter\Validation\Validator\Regex;
 
 class RecoverForm extends CaptchaForm
 {

@@ -5,7 +5,7 @@ namespace Phlexus\Modules\BaseUser\Models;
 
 use Phlexus\Libraries\Media\Models\Media;
 use Phlexus\Models\Model;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 /**
  * Class User

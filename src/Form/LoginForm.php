@@ -16,8 +16,8 @@ namespace Phlexus\Modules\BaseUser\Form;
 use Phlexus\Forms\CaptchaForm;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Email as EmailValidator;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Email as EmailValidator;
 
 class LoginForm extends CaptchaForm
 {
