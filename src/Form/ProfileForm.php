@@ -34,7 +34,6 @@ class ProfileForm extends CaptchaForm
         $email = new Email('email', [
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-email-address'),
-            'readonly'    => true
         ]);
 
         $oldPassword = new Password('old_password', [
