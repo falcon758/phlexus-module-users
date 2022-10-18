@@ -5,6 +5,7 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
+use Phalcon\Tag;
 use Phlexus\Modules\BaseUser\Form\RegisterForm;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
@@ -33,7 +34,7 @@ class AuthController extends Controller
     {
         $title = $this->translation->setTypePage()->_('title-user-register');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
 
         $this->view->setVar('form', new RegisterForm());
     }
@@ -116,7 +117,7 @@ class AuthController extends Controller
 
         $title = $translator->setTypePage()->_('title-user-activation');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
 
         $user = User::getActivateUser($hashCode);
 
@@ -153,7 +154,7 @@ class AuthController extends Controller
     {
         $title = $this->translation->setTypePage()->_('title-user-login');
 
-        $this->tag->setTitle($title);
+        //Tag::setTitle($title);
 
         $this->view->setVar('form', new LoginForm());
     }
@@ -234,7 +235,7 @@ class AuthController extends Controller
     {
         $title = $this->translation->setTypePage()->_('title-password-reminder');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
 
         $this->view->setVar('form', new RemindForm());
     }
@@ -301,7 +302,7 @@ class AuthController extends Controller
 
         $title = $translator->setTypePage()->_('title-password-recover');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
 
         $user = User::findByHashCode($hashCode);
 

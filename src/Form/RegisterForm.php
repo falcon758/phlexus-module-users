@@ -33,26 +33,22 @@ class RegisterForm extends CaptchaForm
         $translationForm = $this->translation->setPage()->setTypeForm();   
 
         $email = new Email('email', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-email-address')
         ]);
         
         $password = new Password('password', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-password')
         ]);
 
         $repeatPassword = new Password('repeat_password', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-repeat-password')
         ]);
 
         $acceptTerms = new Check('accept_terms', [
             'value'       => '1',
-            'required'    => true,
             'placeholder' => $translationForm->_('field-accept-terms')
         ]);
 

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Phlexus\Modules\BaseUser\Controllers;
 
+use Phalcon\Tag;
+
 /**
  * Class IndexController
  *
@@ -17,6 +19,6 @@ final class IndexController extends AbstractController
     {
         $title = $this->translation->setTypePage()->_('title-dashboard');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
     }
 }

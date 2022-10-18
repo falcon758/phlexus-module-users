@@ -30,18 +30,16 @@ class RemindForm extends CaptchaForm
                                           ->_('field-email-address');     
 
         $email = new Email('email', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $emailField
         ]);
 
         $translationMessage = $this->translation->setTypeMessage();
+        
         $email->addValidators([
             new PresenceOf(['message' => $translationMessage->_('field-email-required')]),
             new EmailValidator(['message' => $translationMessage->_('field-email-is-invalid')])
         ]);
-                                
-        $email->addValidator(new PresenceOf(['message' => $emailMessage]));
         
         $this->add($email);
     }

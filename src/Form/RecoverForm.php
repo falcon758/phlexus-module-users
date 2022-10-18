@@ -32,18 +32,15 @@ class RecoverForm extends CaptchaForm
         $translationForm = $this->translation->setPage()->setTypeForm();   
 
         $hashCode = new Hidden('hash_code', [
-            'required' => true,
             'class'    => 'form-control'
         ]);
 
         $password = new Password('password', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-password')
         ]);
 
         $repeatPassword = new Password('repeat_password', [
-            'required'    => true,
             'class'       => 'form-control',
             'placeholder' => $translationForm->_('field-repeat-password')
         ]);

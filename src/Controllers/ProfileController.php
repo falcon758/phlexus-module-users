@@ -8,6 +8,7 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
+use Phalcon\Tag;
 
 /**
  * Class Profile
@@ -25,7 +26,7 @@ final class ProfileController extends AbstractController
     {
         $title = $this->translation->setTypePage()->_('title-user-profile');
 
-        $this->tag->setTitle($title);
+        Tag::setTitle($title);
     }
 
     /**

@@ -80,6 +80,7 @@ class Module extends PhlexusModule
         $theme = Helpers::phlexusConfig('theme');
 
         $themePath = $theme->themes_dir . $theme->theme_user;
+        $cacheDir = $theme->themes_dir_cache;
 
         $view->setMainView($themePath . '/layouts/default');
         $view->setViewsDir($themePath . '/');
