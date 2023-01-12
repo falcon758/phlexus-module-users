@@ -9,6 +9,7 @@ use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
 use Phalcon\Tag;
+use Exception;
 
 /**
  * Class Profile
@@ -151,16 +152,20 @@ final class ProfileController extends AbstractController
 
         $files = $this->request->getUploadedFiles(true, true);
             
-        if (isset($files['profile_image'])) {    
-            $handler = $this->media;        
-            if (!$handler->setFile($files['profile_image'])->uploadFile()) {
+        if (isset($files['profile_image'])) { 
+            $uploader = $this->media;   
+            
+            try {
+                $uploader->setFile($files['profile_image'])
+                         ->upload();
+            } catch (Exception $e) {
                 return false;
             }
 
             $media = Media::createMedia(
-                $handler->getUploadName(),
-                $handler->getFileType(),
-                $handler->getFileDestiny()
+                $uploader->getUploadName(),
+                $uploader->getFileTypeID(),
+                $uploader->getDirTypeID()
             );
 
             $handler->reset();
