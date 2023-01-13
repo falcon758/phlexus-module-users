@@ -98,14 +98,7 @@ final class ProfileController extends AbstractController
         $profileForm->bind(array_intersect_key($post, $authorizedKeys), $user);
 
         $translationMessage = $this->translation->setPage()->setTypeMessage();
-        
-        if (!$profileForm->isValid()) {
-            foreach ($profileForm->getMessages() as $message) {
-                $this->flash->error($message->getMessage());
-            }
-
-            return $this->response->redirect('/profile');
-        }
+       
 
         // Remove csrf content, old_password, repeat_password and profile_image
         $user->csrf            = null;
@@ -168,7 +161,7 @@ final class ProfileController extends AbstractController
                 $uploader->getDirTypeID()
             );
 
-            $handler->reset();
+            $uploader->reset();
 
             if (!$media) {
                 return false;
