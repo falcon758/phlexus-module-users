@@ -116,7 +116,7 @@ class User extends Model
         ]);
         
         $this->hasOne('imageID', Media::class, 'id', [
-            'alias'    => 'media',
+            'alias'    => 'profileImage',
             'reusable' => true,
         ]);
     }
@@ -244,7 +244,7 @@ class User extends Model
             return [];
         }
 
-        $media = $this->media;
+        $media = $this->profileImage;
 
         $userDirectory = Di::getDefault()->getShared('security')->getStaticUserToken();
 
@@ -252,7 +252,7 @@ class User extends Model
             'userDir'  => $userDirectory,
             'email'    => $this->email,
             'userType' => $this->profile->name,
-            'image'    => $media ? $this->media->mediaName : '',
+            'image'    => $media ? $this->profileImage->mediaName : '',
         ];
     }
 
@@ -264,7 +264,7 @@ class User extends Model
      *
      * @return mixed User Model or null
      */
-    public static function createUser(string $email, string $password)
+    public static function createUser(string $email, string $password): ?User
     {
         $newUser            = new self;
         $newUser->email     = $email;
@@ -310,7 +310,7 @@ class User extends Model
      * 
      * @return mixed User or null
      */
-    public static function getActivateUser(string $hashCode)
+    public static function getActivateUser(string $hashCode): ?User
     {
         return self::findFirst([
             'conditions' => 'active = :active: AND hashCode = :hashCode:',

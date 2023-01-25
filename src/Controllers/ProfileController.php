@@ -113,8 +113,14 @@ final class ProfileController extends AbstractController
         $user->repeat_password = null;
         $user->profile_image   = null;
 
-        $media = $this->processUploadImage();
-        if ($media === false) {
+        $hasFiles = $this->request->hasFiles() === true;
+
+        $media = null;
+        if ($hasFiles) {
+            $media = $this->processUploadImage();
+        }
+
+        if ($media === null && $hasFiles) {
             $this->flash->error($translationMessage->_('unable-to-save-image'));
 
             return $this->response->redirect('/profile');
@@ -144,7 +150,7 @@ final class ProfileController extends AbstractController
      *
      * @return mixed null if no file, Media if success or false if fails
      */
-    private function processUploadImage()
+    private function processUploadImage(): ?Media
     {
         if ($this->request->hasFiles() !== true) {
             return null;
@@ -153,13 +159,13 @@ final class ProfileController extends AbstractController
         $files = $this->request->getUploadedFiles(true, true);
             
         if (isset($files['profile_image'])) { 
-            $uploader = $this->media;   
+            $uploader = $this->uploader;   
             
             try {
                 $uploader->setFile($files['profile_image'])
                          ->upload();
             } catch (Exception $e) {
-                return false;
+                return null;
             }
 
             $media = Media::createMedia(
@@ -171,7 +177,7 @@ final class ProfileController extends AbstractController
             $uploader->reset();
 
             if (!$media) {
-                return false;
+                return null;
             }
 
             return $media;
