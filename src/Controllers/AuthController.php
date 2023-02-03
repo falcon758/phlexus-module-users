@@ -68,7 +68,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user = User::findFirstByEmail($post['email']);
+        $user = User::findFirstByEmail((string) $post['email']);
 
         // Email already registered
         if ($user) {
@@ -123,7 +123,7 @@ class AuthController extends Controller
 
         $security = $this->security;
 
-        $token = $this->request->get('token', null, '');
+        $token = (string) $this->request->get('token', null, '');
 
         $translationMessage = $translator->setTypeMessage();
 
@@ -308,7 +308,7 @@ class AuthController extends Controller
 
         $security = $this->security;
 
-        $token = $this->request->get('token', null, '');
+        $token = (string) $this->request->get('token', null, '');
 
         // Assure that only one hash is found and token is correct
         if (count($user) !== 1 || !$security->checkUserTokenByHour($token, $user[0]->userHash)) {
@@ -349,8 +349,6 @@ class AuthController extends Controller
 
         $post = $this->request->getPost();
 
-        $hashCode = $post['hash_code'];
-
         if (!$form->isValid($post)) {
             foreach ($form->getMessages() as $message) {
                 $this->flash->error($message->getMessage());
@@ -359,7 +357,8 @@ class AuthController extends Controller
             return $this->response->redirect($this->request->getHttpReferer());
         }
 
-        $user = User::findByHashCode($hashCode);
+        $hashCode = $post['hash_code'];
+        $user     = User::findByHashCode($hashCode);
 
         // Assure that only one hash is found
         if (count($user) !== 1) {

@@ -51,7 +51,11 @@ final class ProfileController extends AbstractController
 
         $profileForm->setEntity($user);
 
-        $this->view->setVar('defaultRoute', $this->request->getHttpReferer());
+        // @ToDo: Change to a url helper
+        $refererURL = $this->request->getHttpReferer();
+        $parsedUrl  = parse_url($refererURL);
+
+        $this->view->setVar('defaultRoute', $parsedUrl['path'] ?? '/');
         $this->view->setVar('form', $profileForm);
     }
 
@@ -162,21 +166,9 @@ final class ProfileController extends AbstractController
             $uploader = $this->uploader;   
             
             try {
-                $uploader->setFile($files['profile_image'])
-                         ->upload();
+                $media = $uploader->setFile($files['profile_image'])
+                                ->uploadMedia();
             } catch (Exception $e) {
-                return null;
-            }
-
-            $media = Media::createMedia(
-                $uploader->getUploadName(),
-                $uploader->getFileTypeID(),
-                $uploader->getDirTypeID()
-            );
-
-            $uploader->reset();
-
-            if (!$media) {
                 return null;
             }
 
