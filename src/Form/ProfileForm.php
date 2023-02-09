@@ -15,6 +15,7 @@ namespace Phlexus\Modules\BaseUser\Form;
 
 use Phlexus\Forms\CaptchaForm;
 use Phlexus\Modules\BaseUser\Models\User;
+use Phlexus\Libraries\Media\Files\MimeTypes;
 use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\File;
@@ -85,16 +86,13 @@ class ProfileForm extends CaptchaForm
         $profileImage->addValidator(
             new FileValidator(
                 [
-                    'allowEmpty'     => true,
-                    'maxSize'        => '2M',
-                    'allowedTypes'   => [
-                        'image/jpeg',
-                        'image/png',
-                    ],
-                    'message'         => $translationMessage->_('allowed-files-are') . ':types'
+                    'allowEmpty'   => true,
+                    'maxSize'      => '2M',
+                    'allowedTypes' => MimeTypes::IMAGES,
+                    'message'      => $translationMessage->_('allowed-files-are') . ':types'
                 ]
             )
-        );        
+        );
 
         $this->add($email);
         $this->add($oldPassword);

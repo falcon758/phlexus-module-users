@@ -8,6 +8,7 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
+use Phlexus\Libraries\Media\Files\MimeTypes;
 use Phalcon\Tag;
 use Exception;
 
@@ -167,6 +168,7 @@ final class ProfileController extends AbstractController
             
             try {
                 $media = $uploader->setFile($files['profile_image'])
+                                ->setAllowedMimeTypes(MimeTypes::IMAGES)
                                 ->uploadMedia();
             } catch (Exception $e) {
                 return null;
