@@ -19,7 +19,7 @@ use Phalcon\Forms\Element\Email;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Filter\Validation\Validator\PresenceOf;
-use Phalcon\Filter\Validation\Validator\Identical;
+use Phalcon\Filter\Validation\Validator\Confirmation;
 use Phalcon\Filter\Validation\Validator\Regex;
 use Phalcon\Filter\Validation\Validator\Email as EmailValidator;
 
@@ -68,11 +68,11 @@ class RegisterForm extends CaptchaForm
                 ]
             )
         ]);
-        
+
         $repeatPassword->addValidator(
-            new Identical([
-                'value'   => $password->getValue(),
-                'message' => $translationMessage->_('passwords-not-equal')
+            new Confirmation([
+                'with' => ['repeat_password' => 'password'],
+                'message' => ['repeat_password' => $translationMessage->_('passwords-not-equal')]
             ])
         );
 

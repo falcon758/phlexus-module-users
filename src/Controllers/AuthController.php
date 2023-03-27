@@ -80,7 +80,7 @@ class AuthController extends Controller
         $newUser = User::createUser($post['email'], $post['password']);
 
         if (!$newUser) {
-            $this->flash->error($translationMessage->_('record-not-created'));
+            $this->flash->error($translationMessage->_('unable-to-create-account'));
 
             return $this->response->redirect('user/auth/create');
         }
@@ -93,6 +93,8 @@ class AuthController extends Controller
             )
         ) {
             $newUser->delete();
+
+            $this->flash->error($translationMessage->_('unable-to-create-account'));
 
             return $this->response->redirect('user/auth/create');
         }
