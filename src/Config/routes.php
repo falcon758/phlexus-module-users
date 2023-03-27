@@ -108,4 +108,9 @@ $routes->addPost('/profile/save', [
     'action'     => 'save',
 ]);
 
+$routes->addPost('/profile/requestRemoval', [
+    'controller' => 'profile',
+    'action'     => 'requestProfileRemoval',
+]);
+
 return $routes;

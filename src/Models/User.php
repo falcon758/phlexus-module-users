@@ -79,6 +79,11 @@ class User extends Model
     /**
      * @var int|null
      */
+    public $removalRequested;
+
+    /**
+     * @var int|null
+     */
     public $active;
 
     /**

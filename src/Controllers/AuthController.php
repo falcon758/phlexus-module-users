@@ -156,7 +156,7 @@ class AuthController extends Controller
     {
         $title = $this->translation->setTypePage()->_('title-user-login');
 
-        //Tag::setTitle($title);
+        Tag::setTitle($title);
 
         $this->view->setVar('form', new LoginForm());
     }

@@ -9,6 +9,8 @@ use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
 use Phlexus\Libraries\Media\Files\MimeTypes;
+use Phlexus\Libraries\Tokens;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Tag;
 use Exception;
 
@@ -19,6 +21,8 @@ use Exception;
  */
 final class ProfileController extends AbstractController
 {
+    const ACCOUNT_REMOVAL_TOKEN = 'account_removal';
+
     /**
      * Initialize
      *
@@ -56,6 +60,7 @@ final class ProfileController extends AbstractController
         $refererURL = $this->request->getHttpReferer();
         $parsedUrl  = parse_url($refererURL);
 
+        $this->view->setVar('accountRemovalToken', Tokens::generate(self::ACCOUNT_REMOVAL_TOKEN));
         $this->view->setVar('defaultRoute', $parsedUrl['path'] ?? '/');
         $this->view->setVar('form', $profileForm);
     }
@@ -149,6 +154,46 @@ final class ProfileController extends AbstractController
 
         return $this->response->redirect('/profile');
     }
+
+    /**
+     * Request profile removal
+     *
+     * @param int $productID
+     * 
+     * @return ResponseInterface
+     */
+    public function requestProfileRemovalAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        $translationMessage = $this->translation->setPage()->setTypeMessage();
+
+        $response = [
+            'success' => false,
+            'message' => $translationMessage->_('record-removal-requested-failed'),
+        ];
+
+        if (!Tokens::verifyToken(self::ACCOUNT_REMOVAL_TOKEN, (string) $this->request->get('csrf'), true)) {
+            return $this->response->setJsonContent($response);
+        }
+
+        $user = User::getUser();
+
+        if ($user === null) {
+            return $this->response->setJsonContent($response);
+        }
+
+        $user->removalRequested = 1;
+
+        if (!$user->save()) {
+            return $this->response->setJsonContent($response);
+        }
+
+        return $this->response->setJsonContent([
+            'success' => true,
+            'message' => $translationMessage->_('record-removal-requested-success'),
+        ]);
+    } 
 
     /**
      * Process Upload Image
