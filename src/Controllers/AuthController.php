@@ -68,7 +68,7 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
-        $user = User::findFirstByEmail((string) $post['email']);
+        $user = User::findUserByEmail((string) $post['email']);
 
         // Email already registered
         if ($user) {
@@ -189,7 +189,7 @@ class AuthController extends Controller
         $email    = $post['email'];
         $password = $post['password'];
 
-        $user = User::findFirstByEmail($email);
+        $user = User::findUserByEmail($email);
 
         $login = $this->auth->login([
             'email' => $email,
@@ -271,7 +271,7 @@ class AuthController extends Controller
 
         $email = $post['email'];
 
-        $user = User::findFirstByEmail($email);
+        $user = User::findUserByEmail($email);
 
         if (!$user || !isset($user->hashCode)) {
             $this->flash->error($translationMessage->_('reminder-not-processed'));

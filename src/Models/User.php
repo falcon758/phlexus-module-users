@@ -44,6 +44,11 @@ class User extends Model
     /**
      * @var string
      */
+    public string $name;
+
+    /**
+     * @var string
+     */
     public string $email;
 
     /**
@@ -126,6 +131,20 @@ class User extends Model
         ]);
     }
 
+
+    /**
+     * Get encrypt fields
+     *
+     * @return array Fields
+     */
+    public static function getEncryptFields() : array
+    {
+        return [
+            //'name',
+            //'email'
+        ];
+    }
+
     /**
      * After Fetch
      *
@@ -133,6 +152,8 @@ class User extends Model
      */
     public function afterFetch()
     {
+        //parent::afterFetch();
+
         $this->storePassword = $this->password;
     }
 
@@ -143,6 +164,8 @@ class User extends Model
      */
     public function beforeSave()
     {
+        //parent::beforeSave();
+
         if (!isset($this->userHash)) {
             $this->userHash = $this->generateHash();
         }
@@ -262,6 +285,19 @@ class User extends Model
     }
 
     /**
+     * Find User by Email
+     *
+     * @param string $email User email
+     *
+     * @return mixed User Model or null
+     */
+    public static function findUserByEmail(string $email): ?User
+    {
+        // @ToDo: Encrypt emails
+        return self::findFirstByEmail(/*self::encrypt(*/$email/*)*/);
+    }
+
+    /**
      * Create User
      * 
      * @param string $email    User email
@@ -335,7 +371,7 @@ class User extends Model
      */
     public static function canLogin(string $email): bool
     {
-        $user = self::findFirstByEmail($email);
+        $user = self::findUserByEmail($email);
 
         if (!$user || $user->active === 0 || $user->attempts >= self::MAX_ATTEMPTS) {
             return false;

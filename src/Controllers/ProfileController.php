@@ -207,19 +207,17 @@ final class ProfileController extends AbstractController
         }
 
         $files = $this->request->getUploadedFiles(true, true);
-            
+
         if (isset($files['profile_image'])) { 
             $uploader = $this->uploader;   
             
             try {
-                $media = $uploader->setFile($files['profile_image'])
+                return $uploader->setFile($files['profile_image'])
                                 ->setAllowedMimeTypes(MimeTypes::IMAGES)
                                 ->uploadMedia();
             } catch (Exception $e) {
                 return null;
             }
-
-            return $media;
         }
     }
 }
