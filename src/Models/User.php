@@ -29,7 +29,7 @@ class User extends Model
     /**
      * @var User
      */
-    private static User $user;
+    protected static $user;
 
     /**
      * @var string
@@ -40,11 +40,6 @@ class User extends Model
      * @var int
      */
     public $id;
-
-    /**
-     * @var string
-     */
-    public string $name;
 
     /**
      * @var string
@@ -140,7 +135,6 @@ class User extends Model
     public static function getEncryptFields() : array
     {
         return [
-            //'name',
             //'email'
         ];
     }
@@ -323,9 +317,11 @@ class User extends Model
     /**
      * Get Current User
      *
+     * @param bool $forceGetUser
+     * 
      * @return User|null
      */
-    public static function getUser(): ?User
+    public static function getUser(bool $forceGetUser = false): ?User
     {
         $auth = DI::getDefault()->getShared('auth');
 
@@ -335,11 +331,11 @@ class User extends Model
             return null;
         }
 
-        if (isset(self::$user)) {
+        if (isset(self::$user) && !$forceGetUser) {
             return self::$user;
         }
 
-        self::$user = self::findFirstByid($userID);
+        self::$user = static::findFirstByid($userID);
 
         return self::$user;
     }
