@@ -11,7 +11,7 @@ use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\User;
-use Phlexus\Libraries\Helpers;
+use Phlexus\PhlexusHelpers\Emails;
 
 /**
  * Class AuthController
@@ -397,7 +397,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            $body = Helpers::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
+            $body = Emails::renderEmail($this->view, 'auth', 'activate', ['url' => $url]);
         } catch(\Exception $e) {
             $errorMessage = $this->translation->setTypeMessage()
                                              ->_('activation-failed');
@@ -407,7 +407,7 @@ class AuthController extends Controller
             return false;
         }
 
-        return Helpers::sendEmail($user->email, 'Account Activation', $body);
+        return Emails::sendEmail($user->email, 'Account Activation', $body);
     }
 
     /**
@@ -425,7 +425,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            $body = Helpers::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
+            $body = Emails::renderEmail($this->view, 'auth', 'remind', ['url' => $url]);
         } catch(\Exception $e) {
 
             $errorMessage = $this->translation->setTypeMessage()
@@ -436,6 +436,6 @@ class AuthController extends Controller
             return false;
         }
 
-        return Helpers::sendEmail($user->email, 'Password Reminder', $body);
+        return Emails::sendEmail($user->email, 'Password Reminder', $body);
     }
 }
