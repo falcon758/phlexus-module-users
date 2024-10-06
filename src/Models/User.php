@@ -34,12 +34,12 @@ class User extends Model
     /**
      * @var string|null
      */
-    private ?string $storePassword;
+    private ?string $storePassword = null;
 
     /**
      * @var int|null
      */
-    public ?int $id;
+    public ?int $id = null;
 
     /**
      * @var string
@@ -54,17 +54,17 @@ class User extends Model
     /**
      * @var string|null
      */
-    public ?string $userHash;
+    public ?string $userHash = null;
     
     /**
      * @var string|null
      */
-    public ?string $hashCode;
+    public ?string $hashCode = null;
 
     /**
      * @var int|null
      */
-    public ?int $attempts;
+    public ?int $attempts = null;
 
     /**
      * @var int
@@ -74,22 +74,22 @@ class User extends Model
     /**
      * @var int|null
      */
-    public ?int $imageID;
+    public ?int $imageID = null;
 
     /**
      * @var int|null
      */
-    public ?int $removalRequested;
+    public ?int $removalRequested = null;
 
     /**
      * @var int|null
      */
-    public ?int $active;
+    public ?int $active = null;
 
     /**
      * @var string|null
      */
-    public ?string $lastLoginAt;
+    public ?string $lastLoginAt = null;
 
     /**
      * @var string|null
@@ -99,12 +99,12 @@ class User extends Model
     /**
      * @var string|null
      */
-    public ?string $createdAt;
+    public ?string $createdAt = null;
 
     /**
      * @var string|null
      */
-    public ?string $modifiedAt;
+    public ?string $modifiedAt = null;
 
     /**
      * Initialize
