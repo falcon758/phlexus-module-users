@@ -18,9 +18,9 @@ class ProfileResource extends Model
     public const ENABLED = 1;
 
     /**
-     * @var int
+     * @var int|null
      */
-    public $id;
+    public ?int $id;
 
     /**
      * @var int
@@ -35,12 +35,12 @@ class ProfileResource extends Model
     /**
      * @var string|null
      */
-    public $createdAt;
+    public ?string $createdAt;
 
     /**
      * @var string|null
      */
-    public $modifiedAt;
+    public ?string $modifiedAt;
 
     /**
      * Initialize

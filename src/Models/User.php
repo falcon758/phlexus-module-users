@@ -32,14 +32,14 @@ class User extends Model
     protected static $user;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $storePassword;
+    private ?string $storePassword;
 
     /**
-     * @var int
+     * @var int|null
      */
-    public $id;
+    public ?int $id;
 
     /**
      * @var string
@@ -54,17 +54,17 @@ class User extends Model
     /**
      * @var string|null
      */
-    public $userHash;
+    public ?string $userHash;
     
     /**
      * @var string|null
      */
-    public $hashCode;
+    public ?string $hashCode;
 
     /**
      * @var int|null
      */
-    public $attempts;
+    public ?int $attempts;
 
     /**
      * @var int
@@ -74,37 +74,37 @@ class User extends Model
     /**
      * @var int|null
      */
-    public $imageID;
+    public ?int $imageID;
 
     /**
      * @var int|null
      */
-    public $removalRequested;
+    public ?int $removalRequested;
 
     /**
      * @var int|null
      */
-    public $active;
+    public ?int $active;
 
     /**
      * @var string|null
      */
-    public $lastLoginAt;
+    public ?string $lastLoginAt;
 
     /**
      * @var string|null
      */
-    public $lastFailedLoginAt;
+    public ?string $lastFailedLoginAt;
 
     /**
      * @var string|null
      */
-    public $createdAt;
+    public ?string $createdAt;
 
     /**
      * @var string|null
      */
-    public $modifiedAt;
+    public ?string $modifiedAt;
 
     /**
      * Initialize
