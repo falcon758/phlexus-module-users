@@ -40,6 +40,28 @@ $routes->addPost('/user/auth/doLogin', [
     'action'     => 'doLogin',
 ]);
 
+// Social login: Google
+$routes->addGet('/user/auth/google', [
+    'controller' => 'auth',
+    'action'     => 'google',
+]);
+
+$routes->addGet('/user/auth/google/callback', [
+    'controller' => 'auth',
+    'action'     => 'googleCallback',
+]);
+
+// Social login: Apple
+$routes->addGet('/user/auth/apple', [
+    'controller' => 'auth',
+    'action'     => 'apple',
+]);
+
+$routes->addGet('/user/auth/apple/callback', [
+    'controller' => 'auth',
+    'action'     => 'appleCallback',
+]);
+
 $routes->addGet('/user/auth/remind', [
     'controller' => 'auth',
     'action'     => 'remind',

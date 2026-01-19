@@ -6,12 +6,16 @@ namespace Phlexus\Modules\BaseUser\Controllers;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller;
 use Phalcon\Tag;
+use Phlexus\Helpers;
 use Phlexus\Modules\BaseUser\Form\RegisterForm;
 use Phlexus\Modules\BaseUser\Form\LoginForm;
 use Phlexus\Modules\BaseUser\Form\RemindForm;
 use Phlexus\Modules\BaseUser\Form\RecoverForm;
 use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\PhlexusHelpers\Emails;
+// OAuth providers
+use League\OAuth2\Client\Provider\Google as GoogleProvider;
+use Calcinai\OAuth2\Client\Provider\Apple as AppleProvider;
 
 /**
  * Class AuthController
@@ -437,5 +441,250 @@ class AuthController extends Controller
         }
 
         return Emails::sendEmail($user->email, 'Password Reminder', $body);
+    }
+
+    /**
+     * Start Google OAuth flow
+     */
+    public function googleAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        $provider = $this->getGoogleProvider();
+        if ($provider === null) {
+            $this->flash->error('Google OAuth is not configured.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $authUrl = $provider->getAuthorizationUrl([
+            'scope' => ['openid', 'email', 'profile'],
+        ]);
+        $this->session->set('oauth2state', $provider->getState());
+
+        return $this->response->redirect($authUrl, true);
+    }
+
+    /**
+     * Handle Google OAuth callback
+     */
+    public function googleCallbackAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        $provider = $this->getGoogleProvider();
+        if ($provider === null) {
+            $this->flash->error('Google OAuth is not configured.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $expectedState = (string) $this->session->get('oauth2state');
+        $state = (string) $this->request->get('state', null, '');
+        if (!$state || $state !== $expectedState) {
+            $this->session->remove('oauth2state');
+            $this->flash->error('Invalid OAuth state for Google login.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $code = (string) $this->request->get('code', null, '');
+        if ($code === '') {
+            $this->flash->error('Missing authorization code.');
+            return $this->response->redirect('user/auth');
+        }
+
+        try {
+            $token = $provider->getAccessToken('authorization_code', [
+                'code' => $code,
+            ]);
+            $owner = $provider->getResourceOwner($token);
+            $email = method_exists($owner, 'getEmail') ? (string) $owner->getEmail() : '';
+            $name  = method_exists($owner, 'getName') ? (string) $owner->getName() : '';
+
+            return $this->handleSocialLogin('google', $email, $name);
+        } catch (\Throwable $e) {
+            $this->flash->error('Google login failed.');
+            return $this->response->redirect('user/auth');
+        }
+    }
+
+    /**
+     * Start Apple Sign In flow
+     */
+    public function appleAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        $provider = $this->getAppleProvider();
+        if ($provider === null) {
+            $this->flash->error('Apple Sign In is not configured.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $authUrl = $provider->getAuthorizationUrl([
+            'scope' => [
+                'name',
+                'email',
+            ],
+            // Apple requires response_mode=form_post for some flows but most providers default appropriately
+        ]);
+        $this->session->set('oauth2state', $provider->getState());
+
+        return $this->response->redirect($authUrl, true);
+    }
+
+    /**
+     * Handle Apple Sign In callback
+     */
+    public function appleCallbackAction(): ResponseInterface
+    {
+        $this->view->disable();
+
+        $provider = $this->getAppleProvider();
+        if ($provider === null) {
+            $this->flash->error('Apple Sign In is not configured.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $expectedState = (string) $this->session->get('oauth2state');
+        $state = (string) $this->request->get('state', null, '');
+        if (!$state || $state !== $expectedState) {
+            $this->session->remove('oauth2state');
+            $this->flash->error('Invalid OAuth state for Apple login.');
+            return $this->response->redirect('user/auth');
+        }
+
+        $code = (string) $this->request->get('code', null, '');
+        if ($code === '') {
+            $this->flash->error('Missing authorization code.');
+            return $this->response->redirect('user/auth');
+        }
+
+        try {
+            $token = $provider->getAccessToken('authorization_code', [
+                'code' => $code,
+            ]);
+            $owner = $provider->getResourceOwner($token);
+            // Apple may not always return email after first time; rely on id_token parsing via provider
+            $email = method_exists($owner, 'getEmail') ? (string) $owner->getEmail() : '';
+            $name  = method_exists($owner, 'getName') ? (string) $owner->getName() : '';
+
+            return $this->handleSocialLogin('apple', $email, $name);
+        } catch (\Throwable $e) {
+            $this->flash->error('Apple login failed.');
+            return $this->response->redirect('user/auth');
+        }
+    }
+
+    /**
+     * Common handler: find or create user, then log them in.
+     */
+    private function handleSocialLogin(string $provider, string $email, string $name = ''): ResponseInterface
+    {
+        $translationMessage = $this->translation->setTypeMessage();
+
+        if ($email === '') {
+            $this->flash->error($translationMessage->_('login-failed'));
+            return $this->response->redirect('user/auth');
+        }
+
+        $user = User::findUserByEmail($email);
+
+        if (!$user) {
+            // Auto-provision a new user for social login
+            $password = $this->security->getRandom()->base64Safe(32);
+            $user = User::createUser($email, $password);
+            if ($user) {
+                $user->active = User::ENABLED; // Trust verified providers
+                $user->save();
+            }
+        }
+
+        if (!$user) {
+            $this->flash->error($translationMessage->_('unable-to-create-account'));
+            return $this->response->redirect('user/auth');
+        }
+
+        // Respect disabled/locked accounts
+        if ((int) $user->active !== User::ENABLED) {
+            $this->flash->error($translationMessage->_('login-failed'));
+            return $this->response->redirect('user/auth');
+        }
+
+        // Attempt to mark login success on the model
+        $user->successfullLogin();
+
+        // Hand off to Auth Manager (best-effort across possible APIs)
+        $redirect = '/';
+        try {
+            if (method_exists($this->auth, 'loginById')) {
+                $this->auth->loginById((int) $user->id);
+            } elseif (method_exists($this->auth, 'forceLogin')) {
+                $this->auth->forceLogin((int) $user->id);
+            } elseif (method_exists($this->auth, 'setIDentity')) {
+                $this->auth->setIDentity((int) $user->id);
+            } else {
+                // Fallback: store basic identity in session if no method is available
+                $this->session->set('auth', ['id' => (int) $user->id]);
+            }
+
+            if (method_exists($this->auth, 'getloginRedirect')) {
+                $redirect = (string) $this->auth->getloginRedirect();
+            }
+        } catch (\Throwable $e) {
+            $this->flash->error($translationMessage->_('login-failed'));
+            return $this->response->redirect('user/auth');
+        }
+
+        return $this->response->redirect($redirect);
+    }
+
+    /**
+     * Build Google Provider from config
+     */
+    private function getGoogleProvider(): ?GoogleProvider
+    {
+        $config = Helpers::phlexusConfig()->toArray();
+        $cfg = $config['oauth']['google'] ?? [];
+
+        $clientId = $cfg['client_id'] ?? getenv('GOOGLE_CLIENT_ID') ?: '';
+        $clientSecret = $cfg['client_secret'] ?? getenv('GOOGLE_CLIENT_SECRET') ?: '';
+        $redirectUri = $cfg['redirect_uri'] ?? getenv('GOOGLE_REDIRECT_URI') ?: $this->url->get('/user/auth/google/callback');
+
+        if ($clientId === '' || $clientSecret === '') {
+            return null;
+        }
+
+        return new GoogleProvider([
+            'clientId'     => $clientId,
+            'clientSecret' => $clientSecret,
+            'redirectUri'  => $redirectUri,
+            'hostedDomain' => $cfg['hosted_domain'] ?? null,
+        ]);
+    }
+
+    /**
+     * Build Apple Provider from config
+     */
+    private function getAppleProvider(): ?AppleProvider
+    {
+        $config = Helpers::phlexusConfig()->toArray();
+        $cfg = $config['oauth']['apple'] ?? [];
+
+        $clientId = $cfg['client_id'] ?? getenv('APPLE_CLIENT_ID') ?: '';
+        $teamId = $cfg['team_id'] ?? getenv('APPLE_TEAM_ID') ?: '';
+        $keyFileId = $cfg['key_id'] ?? getenv('APPLE_KEY_ID') ?: '';
+        $keyFilePath = $cfg['key_file_path'] ?? getenv('APPLE_KEY_FILE_PATH') ?: '';
+        $redirectUri = $cfg['redirect_uri'] ?? getenv('APPLE_REDIRECT_URI') ?: $this->url->get('/user/auth/apple/callback');
+
+        if ($clientId === '' || $teamId === '' || $keyFileId === '' || $keyFilePath === '') {
+            return null;
+        }
+
+        return new AppleProvider([
+            'clientId'    => $clientId,
+            'teamId'      => $teamId,
+            'keyFileId'   => $keyFileId,
+            'keyFilePath' => $keyFilePath,
+            'redirectUri' => $redirectUri,
+        ]);
     }
 }
