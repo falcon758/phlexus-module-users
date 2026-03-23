@@ -74,6 +74,11 @@ final class DefaultAcl extends Memory
 
         foreach ($profile->getProfileResource() as $profileResource) {
             $resource = $profileResource->resource;
+
+            if (!$resource) {
+                return;
+            }
+
             $this->addComponent(new Component($resource->resource), $resource->action);
             $this->allow($profile->name, $resource->resource, $resource->action);
         }
