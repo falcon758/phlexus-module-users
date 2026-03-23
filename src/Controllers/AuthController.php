@@ -478,14 +478,14 @@ class AuthController extends Controller
         }
 
         $expectedState = (string) $this->session->get('oauth2state');
-        $state = (string) $this->request->get('state', null, '');
+        $state = (string) $this->request->getPost('state', null, (string) $this->request->get('state', null, ''));
         if (!$state || $state !== $expectedState) {
             $this->session->remove('oauth2state');
             $this->flash->error('Invalid OAuth state for Google login.');
             return $this->response->redirect('user/auth');
         }
 
-        $code = (string) $this->request->get('code', null, '');
+        $code = (string) $this->request->getPost('code', null, (string) $this->request->get('code', null, ''));
         if ($code === '') {
             $this->flash->error('Missing authorization code.');
             return $this->response->redirect('user/auth');

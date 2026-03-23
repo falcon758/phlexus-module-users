@@ -62,6 +62,11 @@ $routes->addGet('/user/auth/apple/callback', [
     'action'     => 'appleCallback',
 ]);
 
+$routes->addPost('/user/auth/apple/callback', [
+    'controller' => 'auth',
+    'action'     => 'appleCallback',
+]);
+
 $routes->addGet('/user/auth/remind', [
     'controller' => 'auth',
     'action'     => 'remind',
