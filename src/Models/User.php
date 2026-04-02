@@ -160,6 +160,14 @@ class User extends Model
     {
         //parent::beforeSave();
 
+        $now = date('Y-m-d H:i:s');
+
+        if (empty($this->createdAt)) {
+            $this->createdAt = $now;
+        }
+
+        $this->modifiedAt = $now;
+
         if (!isset($this->userHash)) {
             $this->userHash = $this->generateHash();
         }
