@@ -94,7 +94,7 @@ class User extends Model
     /**
      * @var string|null
      */
-    public ?string $lastFailedLoginAt;
+    public ?string $lastFailedLoginAt = null;
 
     /**
      * @var string|null
