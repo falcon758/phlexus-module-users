@@ -9,7 +9,7 @@ use Phlexus\Modules\BaseUser\Form\ProfileForm;
 use Phlexus\Modules\BaseUser\Controllers\AbstractController;
 use Phlexus\Libraries\Media\Models\Media;
 use Phlexus\Libraries\Media\Files\MimeTypes;
-use Phlexus\Libraries\Tokens;
+use Phlexus\PhlexusHelpers\Tokens;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Tag;
 use Exception;
