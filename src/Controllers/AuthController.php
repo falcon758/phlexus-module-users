@@ -612,29 +612,33 @@ class AuthController extends Controller
         // Attempt to mark login success on the model
         $user->successfullLogin();
 
-        // Hand off to Auth Manager (best-effort across possible APIs)
-        $redirect = '/';
         try {
-            if (method_exists($this->auth, 'loginById')) {
-                $this->auth->loginById((int) $user->id);
-            } elseif (method_exists($this->auth, 'forceLogin')) {
-                $this->auth->forceLogin((int) $user->id);
-            } elseif (method_exists($this->auth, 'setIDentity')) {
-                $this->auth->setIDentity((int) $user->id);
-            } else {
-                // Fallback: store basic identity in session if no method is available
-                $this->session->set('auth', ['id' => (int) $user->id]);
-            }
-
-            if (method_exists($this->auth, 'getloginRedirect')) {
-                $redirect = (string) $this->auth->getloginRedirect();
-            }
+            $this->loginSocialUser($user);
         } catch (\Throwable $e) {
             $this->flash->error($translationMessage->_('login-failed'));
             return $this->response->redirect('user/auth');
         }
 
-        return $this->response->redirect($redirect);
+        return $this->response->redirect($this->auth->getloginRedirect());
+    }
+
+    /**
+     * Persist the authenticated user identity using the auth manager contract.
+     */
+    private function loginSocialUser(User $user): void
+    {
+        $sessionAuthKey = method_exists($this->auth, 'getSessionAuthKey')
+            ? (string) $this->auth->getSessionAuthKey()
+            : 'auth_session';
+
+        $this->session->set($sessionAuthKey, (int) $user->id);
+
+        if (method_exists($this->auth, 'getEventsManager')) {
+            $eventsManager = $this->auth->getEventsManager();
+            if ($eventsManager !== null && $eventsManager->hasListeners('auth:afterLogin')) {
+                $eventsManager->fire('auth:afterLogin', $this->auth);
+            }
+        }
     }
 
     /**
