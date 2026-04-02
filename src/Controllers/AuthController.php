@@ -103,6 +103,8 @@ class AuthController extends Controller
             return $this->response->redirect('user/auth/create');
         }
 
+        $this->sendCompanyUserCreatedEmail($newUser, 'register');
+
         $this->flash->success($translationMessage->_('account-created-successfully'));
 
         return $this->response->redirect('user/auth');
@@ -580,6 +582,7 @@ class AuthController extends Controller
     private function handleSocialLogin(string $provider, string $email, string $name = ''): ResponseInterface
     {
         $translationMessage = $this->translation->setTypeMessage();
+        $userCreated = false;
 
         if ($email === '') {
             $this->flash->error($translationMessage->_('login-failed'));
@@ -593,6 +596,7 @@ class AuthController extends Controller
             $password = $this->security->getRandom()->base64Safe(32);
             $user = User::createUser($email, $password);
             if ($user) {
+                $userCreated = true;
                 $user->active = User::ENABLED; // Trust verified providers
                 $user->save();
             }
@@ -607,6 +611,10 @@ class AuthController extends Controller
         if ((int) $user->active !== User::ENABLED) {
             $this->flash->error($translationMessage->_('login-failed'));
             return $this->response->redirect('user/auth');
+        }
+
+        if ($userCreated) {
+            $this->sendCompanyUserCreatedEmail($user, $provider);
         }
 
         // Attempt to mark login success on the model
@@ -638,6 +646,34 @@ class AuthController extends Controller
             if ($eventsManager !== null && $eventsManager->hasListeners('auth:afterLogin')) {
                 $eventsManager->fire('auth:afterLogin', $this->auth);
             }
+        }
+    }
+
+    /**
+     * Notify the company when a new user account is created.
+     */
+    private function sendCompanyUserCreatedEmail(User $user, string $source): void
+    {
+        $company = Helpers::phlexusConfig('company')->toArray();
+        $companyEmail = (string) ($company['email'] ?? '');
+
+        if ($companyEmail === '') {
+            return;
+        }
+
+        $vars = [
+            'companyName' => (string) ($company['name'] ?? 'Our team'),
+            'userEmail' => (string) $user->email,
+            'source' => $source,
+            'status' => (int) $user->active === User::ENABLED ? 'enabled' : 'pending activation',
+            'createdAt' => (string) ($user->createdAt ?? ''),
+        ];
+
+        try {
+            $body = Emails::renderEmail($this->view, 'auth', 'created_user', $vars);
+            Emails::sendEmail($companyEmail, 'New user created: ' . (string) $user->email, $body);
+        } catch (\Throwable $e) {
+            // Best-effort notification; user creation should not fail if this email cannot be sent.
         }
     }
 
