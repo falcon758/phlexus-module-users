@@ -64,6 +64,7 @@ class Profile extends Model
     public function initialize()
     {
         $this->setSource('profiles');
+        $this->skipAttributesOnUpdate(['createdAt']);
 
         $this->hasMany('id', User::class, 'profileID', [
             'alias'      => 'user',
@@ -78,6 +79,14 @@ class Profile extends Model
                 'action' => Relation::ACTION_CASCADE,
             ],
         ]);
+    }
+
+    /**
+     * Before update
+     */
+    public function beforeUpdate()
+    {
+        $this->modifiedAt = date('Y-m-d H:i:s');
     }
 
     /**

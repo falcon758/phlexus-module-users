@@ -55,6 +55,7 @@ class Resource extends Model
     public function initialize()
     {
         $this->setSource('resources');
+        $this->skipAttributesOnUpdate(['createdAt']);
 
         $this->hasMany('id', ProfileResource::class, 'resourceID', [
             'alias'      => 'profileResource',
@@ -62,5 +63,13 @@ class Resource extends Model
                 'message' => 'Profile is being used on ProfileResource',
             ],
         ]);
+    }
+
+    /**
+     * Before update
+     */
+    public function beforeUpdate()
+    {
+        $this->modifiedAt = date('Y-m-d H:i:s');
     }
 }
