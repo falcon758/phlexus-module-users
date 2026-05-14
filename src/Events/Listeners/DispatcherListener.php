@@ -15,6 +15,7 @@ use Phlexus\Module\ModuleException;
 use Phlexus\Module\ModuleInterface;
 use Phlexus\Modules\BaseUser\Module as UserModule;
 use Phlexus\Helpers;
+use Throwable;
 
 final class DispatcherListener extends Injectable
 {
@@ -71,6 +72,23 @@ final class DispatcherListener extends Injectable
 
         if ($exception instanceof AuthException) {
             $this->response->setStatusCode(402);
+            $dispatcher->forward([
+                'module'     => $moduleName,
+                'namespace'  => $namespace,
+                'controller' => 'auth',
+                'action'     => 'login',
+            ]);
+
+            $event->stop();
+        } elseif (!($exception instanceof MvcDispatcherException)) {
+            // Unhandled application exception — log it and forward to a safe error response
+            error_log(
+                'Unhandled dispatcher exception [' . get_class($exception) . ']: '
+                . $exception->getMessage()
+                . ' in ' . $exception->getFile() . ':' . $exception->getLine()
+            );
+
+            $this->response->setStatusCode(500);
             $dispatcher->forward([
                 'module'     => $moduleName,
                 'namespace'  => $namespace,
