@@ -60,12 +60,11 @@ final class DispatcherListener extends Injectable
      *
      * @param Event $event Event object.
      * @param Dispatcher $dispatcher Dispatcher object.
-     * @param Exception $exception Exception object.
+     * @param Throwable $exception Exception object.
      *
-     * @throws Exception
      * @return bool
      */
-    public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception): bool
+    public function beforeException(Event $event, Dispatcher $dispatcher, Throwable $exception): bool
     {
         $moduleName = UserModule::getModuleName();
         $namespace = UserModule::getHandlersNamespace() . '\\Controllers';
