@@ -81,6 +81,10 @@ final class ProfileController extends AbstractController
             return $this->response->redirect('/');
         }
 
+        if (!$this->request->isPost()) {
+            return $this->response->redirect('/profile');
+        }
+
         $post = $this->request->getPost();
 
         if (!$post) {
@@ -173,7 +177,11 @@ final class ProfileController extends AbstractController
             'message' => $translationMessage->_('record-removal-requested-failed'),
         ];
 
-        if (!Tokens::verifyToken(self::ACCOUNT_REMOVAL_TOKEN, (string) $this->request->get('csrf'), true)) {
+        if (!$this->request->isPost()) {
+            return $this->response->setJsonContent($response);
+        }
+
+        if (!Tokens::verifyToken(self::ACCOUNT_REMOVAL_TOKEN, (string) $this->request->getPost('csrf'), true)) {
             return $this->response->setJsonContent($response);
         }
 

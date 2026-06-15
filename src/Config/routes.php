@@ -87,7 +87,7 @@ $routes->addPost('/user/auth/doRecover', [
     'action'     => 'doRecover',
 ]);
 
-$routes->addGet('/user/auth/logout', [
+$routes->addPost('/user/auth/logout', [
     'controller' => 'auth',
     'action'     => 'logout',
 ]);

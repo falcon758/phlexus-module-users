@@ -227,6 +227,10 @@ class AuthController extends Controller
     {
         $this->view->disable();
 
+        if (!$this->request->isPost() || !$this->security->checkToken('csrf', (string) $this->request->getPost('csrf'))) {
+            return $this->response->redirect('/');
+        }
+
         if ($this->auth->isLogged()) {
             $this->auth->logout();
         }
