@@ -15,7 +15,7 @@ use Phlexus\Modules\BaseUser\Models\User;
 use Phlexus\PhlexusHelpers\Emails;
 // OAuth providers
 use League\OAuth2\Client\Provider\Google as GoogleProvider;
-use Calcinai\OAuth2\Client\Provider\Apple as AppleProvider;
+use League\OAuth2\Client\Provider\Apple as AppleProvider;
 
 /**
  * Class AuthController
@@ -551,14 +551,14 @@ class AuthController extends Controller
         }
 
         $expectedState = (string) $this->session->get('oauth2state');
-        $state = (string) $this->request->get('state', null, '');
+        $state = (string) $this->request->getPost('state', null, (string) $this->request->get('state', null, ''));
         if (!$state || $state !== $expectedState) {
             $this->session->remove('oauth2state');
             $this->flash->error('Invalid OAuth state for Apple login.');
             return $this->response->redirect('user/auth');
         }
 
-        $code = (string) $this->request->get('code', null, '');
+        $code = (string) $this->request->getPost('code', null, (string) $this->request->get('code', null, ''));
         if ($code === '') {
             $this->flash->error('Missing authorization code.');
             return $this->response->redirect('user/auth');
@@ -571,7 +571,9 @@ class AuthController extends Controller
             $owner = $provider->getResourceOwner($token);
             // Apple may not always return email after first time; rely on id_token parsing via provider
             $email = method_exists($owner, 'getEmail') ? (string) $owner->getEmail() : '';
-            $name  = method_exists($owner, 'getName') ? (string) $owner->getName() : '';
+            $firstName = method_exists($owner, 'getFirstName') ? (string) $owner->getFirstName() : '';
+            $lastName  = method_exists($owner, 'getLastName')  ? (string) $owner->getLastName()  : '';
+            $name = trim($firstName . ' ' . $lastName);
 
             return $this->handleSocialLogin('apple', $email, $name);
         } catch (\Throwable $e) {
